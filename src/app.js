@@ -5,6 +5,43 @@ const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const lyricRouter = require('./Lyrics/lyric-router')
+const knex = require('knex')
+
+const knexInstance = knex({
+  client: 'pg',
+  connection: process.env.DB_URL,
+})
+
+// knexInstance.from('lyric_data').select('*')
+// .then(result =>{
+//    console.log(result)
+// })
+// knexInstance.from('lyric_data')
+
+// const qry = knexInstance
+// .select('title','lyrics')
+// .from('lyric_data')
+// .where({artist:'Jupiter'})
+// .first()
+// .toQuery()
+// .then(r=>{
+//   console.log(r)
+// })
+// console.log(qry)
+
+function searchByTitle(searchTerm) {
+  knexInstance
+  .select('title', 'genre', 'mood', 'artist','lyrics')
+     .from('lyric_data')
+    .where('title', 'ILIKE', `%${searchTerm}%`)
+    .then(result => {
+      console.log(result)
+     })
+}
+
+searchByTitle('ow')
+
+
 
 const app = express()
 
@@ -12,7 +49,7 @@ app.get('/', (req, res) => {
   res.send('Hello, world!')
  })
 
- 
+
 //Set Up validate Token
 app.use(function validateBearerToken(req, res, next) {
   const apiToken = process.env.API_TOKEN
