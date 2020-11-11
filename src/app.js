@@ -8,6 +8,11 @@ const lyricRouter = require('./Lyrics/lyric-router')
 
 const app = express()
 
+app.get('/', (req, res) => {
+  res.send('Hello, world!')
+ })
+
+ 
 //Set Up validate Token
 app.use(function validateBearerToken(req, res, next) {
   const apiToken = process.env.API_TOKEN
@@ -20,10 +25,6 @@ app.use(function validateBearerToken(req, res, next) {
   // move to the next middleware
   next()
 })
-
-app.get('/', (req, res) => {
-      res.send('Hello, world!')
-     })
 
      
 app.use(lyricRouter);
