@@ -6,11 +6,14 @@ const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const lyricRouter = require('./Lyrics/lyric-router')
 const knex = require('knex')
+const LyricService = require('./lyric-service')
 
 const knexInstance = knex({
   client: 'pg',
   connection: process.env.DB_URL,
 })
+
+console.log(LyricService.getAllArticles())
 
 // knexInstance.from('lyric_data').select('*')
 // .then(result =>{
@@ -39,7 +42,22 @@ function searchByTitle(searchTerm) {
      })
 }
 
-searchByTitle('ow')
+function paginateLyrics(page) {
+  const lyricsPerPage = 2
+  const offset = lyricsPerPage * (page - 1)
+  knexInstance
+  .select('title', 'genre', 'mood', 'artist','lyrics')
+  .from('lyric_data')
+    .limit(lyricsPerPage)
+    .offset(offset)
+    .then(result => {
+      console.log(result)
+    })
+}
+
+// paginateLyrics(1)
+
+// searchByTitle('ow')
 
 
 
