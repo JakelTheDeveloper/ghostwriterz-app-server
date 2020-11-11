@@ -43,6 +43,16 @@ describe('Lyric-Router', () => {
       .then(res => {
         // expect(200,res.body)
         expect(res.body).to.be.an('array');
+        expect(res.body).to.have.lengthOf.at.least(1);
+        expect(res.body[0]).to.have.all.keys('id','title','rating','genre','mood','artist','lyrics','expanded');
+        expect(res.body[0].id).to.be.an('number');
+        expect(res.body[0].title).to.be.an('string');
+        expect(res.body[0].rating).to.be.an('number');
+        expect(res.body[0].genre).to.be.an('string');
+        expect(res.body[0].mood).to.be.an('string');
+        expect(res.body[0].artist).to.be.an('string');
+        expect(res.body[0].lyrics).to.be.an('string');
+        expect(res.body[0].expanded).to.be.an('boolean');
       })
   })
 })
