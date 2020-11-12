@@ -5,13 +5,119 @@ const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const lyricRouter = require('./Lyrics/lyric-router')
-const knex = require('knex')
+// const knex = require('knex')
 const LyricService = require('./lyric-service')
 
-const knexInstance = knex({
-  client: 'pg',
-  connection: process.env.DB_URL,
+// const knexInstance = knex({
+//   client: 'pg',
+//   connection: process.env.DB_URL,
+// })
+
+
+const app = express()
+
+app.get('/', (req, res, next) => {
+  res.send('Hello, world!')
 })
+
+app.get('/lyrics', (req, res, next) => {
+  const knexInstance = req.app.get('db')
+  LyricService.getAllLyrics(knexInstance)
+    .then(lyrics => {
+      res.json(lyrics)
+    })
+    .catch(next)
+})
+
+app.get('/lyrics/:lyric_id', (req, res, next) => {
+  const knexInstance = req.app.get('db')
+  LyricService.getById(knexInstance, req.params.lyric_id)
+    .then(lyric => {
+      res.json(lyric)
+    })
+    .catch(next)
+})
+
+
+
+app.use(lyricRouter);
+
+//Set Up validate Token
+app.use(function validateBearerToken(req, res, next) {
+  const apiToken = process.env.API_TOKEN
+  const authToken = req.get('Authorization')
+
+  if (!authToken || authToken.split(' ')[1] !== apiToken) {
+    logger.error(`Unauthorized request to path: ${req.path}`);
+    return res.status(401).json({ error: 'Unauthorized request' })
+  }
+  // move to the next middleware
+  next()
+})
+
+
+
+
+
+
+app.use(function errorHandler(error, req, res, next) {
+  let response
+  if (NODE_ENV === 'production') {
+    response = { error: { message: 'server error' } }
+  } else {
+    console.error(error)
+    response = { message: error.message, error }
+  }
+  res.status(500).json(response)
+})
+
+const morganOption = (NODE_ENV === 'production')
+  ? 'tiny'
+  : 'common';
+
+app.use(morgan(morganOption))
+app.use(helmet())
+app.use(cors())
+
+module.exports = app
+
+
+
+
+
+
+
+
+
+
+
+
+
+// LyricService.getAllLyrics(knexInstance)
+//   .then(lyrics => console.log(lyrics))
+//   .then(() =>
+//     LyricService.insertLyrics(knexInstance, {
+//       title: "Hello",
+//       genre: "Rap",
+//       mood: "Happy",
+//       artist: "Foo",
+//       lyrics: "Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis"
+//     })
+//   )
+//   .then(newLyric => {
+//     console.log(newLyric)
+//     return LyricService.updateLyrics(
+//       knexInstance,
+//       newLyric.id,
+//       {
+//         title: "Updated Title",
+//       }
+//     ).then(() => LyricService.getById(knexInstance, newLyric.id))
+//   })
+//   .then(lyric => {
+//     console.log(lyric)
+//     return LyricService.deleteLyrics(knexInstance, lyric.id)
+//   })
 
 
 // console.log(LyricService.getAllLyrics())
@@ -33,101 +139,29 @@ const knexInstance = knex({
 // })
 // console.log(qry)
 
-function searchByTitle(searchTerm) {
-  knexInstance
-  .select('title', 'genre', 'mood', 'artist','lyrics')
-     .from('lyric_data')
-    .where('title', 'ILIKE', `%${searchTerm}%`)
-    .then(result => {
-      console.log(result)
-     })
-}
+// function searchByTitle(searchTerm) {
+//   knexInstance
+//   .select('title', 'genre', 'mood', 'artist','lyrics')
+//      .from('lyric_data')
+//     .where('title', 'ILIKE', `%${searchTerm}%`)
+//     .then(result => {
+//       console.log(result)
+//      })
+// }
 
-function paginateLyrics(page) {
-  const lyricsPerPage = 2
-  const offset = lyricsPerPage * (page - 1)
-  knexInstance
-  .select('title', 'genre', 'mood', 'artist','lyrics')
-  .from('lyric_data')
-    .limit(lyricsPerPage)
-    .offset(offset)
-    .then(result => {
-      console.log(result)
-    })
-}
+// function paginateLyrics(page) {
+//   const lyricsPerPage = 2
+//   const offset = lyricsPerPage * (page - 1)
+//   knexInstance
+//   .select('title', 'genre', 'mood', 'artist','lyrics')
+//   .from('lyric_data')
+//     .limit(lyricsPerPage)
+//     .offset(offset)
+//     .then(result => {
+//       console.log(result)
+//     })
+// }
 // paginateLyrics(1)
 // searchByTitle('ow')
 
 // use all the LyricService methods!!
-LyricService.getAllLyrics(knexInstance)
-  .then(lyrics => console.log(lyrics))
-  .then(() =>
-    LyricService.insertLyrics(knexInstance, {
-      title: "Hello",
-      genre: "Rap",
-      mood: "Happy",
-      artist: "Foo",
-      lyrics: "Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis"
-  })
-  )
-  .then(newLyric => {
-    console.log(newLyric)
-    return LyricService.updateLyrics(
-      knexInstance,
-      newLyric.id,
-      {
-        title: "Updated Title",
-      }
-    ).then(() => LyricService.getById(knexInstance, newLyric.id))
-  })
-  .then(lyric => {
-    console.log(lyric)
-    return LyricService.deleteLyrics(knexInstance, lyric.id)
-  })
-
-
-
-const app = express()
-
-// app.get('/', (req, res) => {
-//   res.send('Hello, world!')
-//  })
-
-//Set Up validate Token
-app.use(function validateBearerToken(req, res, next) {
-  const apiToken = process.env.API_TOKEN
-  const authToken = req.get('Authorization')
-
-  if (!authToken || authToken.split(' ')[1] !== apiToken) {
-    logger.error(`Unauthorized request to path: ${req.path}`);
-    return res.status(401).json({ error: 'Unauthorized request' })
-  }
-  // move to the next middleware
-  next()
-})
-     
-app.use(lyricRouter);
-
-
-
-
-     app.use(function errorHandler(error, req, res, next) {
-           let response
-           if (NODE_ENV === 'production') {
-             response = { error: { message: 'server error' } }
-           } else {
-             console.error(error)
-             response = { message: error.message, error }
-           }
-           res.status(500).json(response)
-         })
-
-const morganOption = (NODE_ENV === 'production')
-  ? 'tiny'
-  : 'common';
-
-app.use(morgan(morganOption))
-app.use(helmet())
-app.use(cors())
-
-module.exports = app
