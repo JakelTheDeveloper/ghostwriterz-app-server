@@ -1,0 +1,7 @@
+ALTER TABLE lyric_data DROP COLUMN IF EXISTS genre;
+
+ALTER TABLE lyric_data DROP COLUMN IF EXISTS mood;
+
+DROP TYPE IF EXISTS genres;
+
+DROP TYPE IF EXISTS moods;
