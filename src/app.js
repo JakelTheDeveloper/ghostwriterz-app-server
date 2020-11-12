@@ -33,6 +33,11 @@ app.get('/lyrics/:lyric_id', (req, res, next) => {
   const knexInstance = req.app.get('db')
   LyricService.getById(knexInstance, req.params.lyric_id)
     .then(lyric => {
+      if(!lyric){
+        return res.status(404).json({
+          error:{message:`Lyrics doesn't exist`}
+        })
+      }
       res.json(lyric)
     })
     .catch(next)

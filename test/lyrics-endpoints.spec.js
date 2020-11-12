@@ -19,24 +19,58 @@ describe.only('Articles Endpoints', function () {
 
     afterEach('cleanup', () => db('lyric_data').truncate())
 
-    context('Given there are lyrics in the database', () => {
-        const testData = makeLyricsArray()
-        beforeEach('insert Lyrics', () => {
-            return db
-                .into('lyric_data')
-                .insert(testData)
+    describe('GET /lyrics', () => {
+        context('Given there are lyrics in the database', () => {
+            const testData = makeLyricsArray()
+            beforeEach('insert Lyrics', () => {
+                return db
+                    .into('lyric_data')
+                    .insert(testData)
+            })
+            it('responds with 200 of all articles', () => {
+                return supertest(app)
+                    .get('/lyrics')
+                    .expect(200, testData)
+            })
         })
-        it('GET /lyrics responds with 200 and all of the lyrics', () => {
-                 return supertest(app)
-                   .get('/lyrics')
-                   .expect(200,testData)
-               })
-               it('GET /lyrics/:lyric_id responds with 200 and the specified lyrics', () => {
+        describe('GET /lyrics/:lyric_id', () => {
+            context('Given there are lyrics in the database', () => {
+                const testData = makeLyricsArray()
+
+                beforeEach('insert lyrics', () => {
+                    return db
+                        .into('lyric_data')
+                        .insert(testData)
+                })
+
+                it('responds with 200 and the specified lyrics', () => {
                     const lyricId = 2
-                     const expectedLyric = testData[lyricId - 1]
-                     return supertest(app)
-                       .get(`/lyrics/${lyricId}`)
-                       .expect(200, expectedLyric)
-                   })
+                    const expectedLyric = testData[lyricId - 1]
+                    return supertest(app)
+                        .get(`/lyrics/${lyricId}`)
+                        .expect(200, expectedLyric)
+                })
+            })
+            describe('GET /lyrics', () => {
+                context('Given there are lyrics in the database', () => {
+                    it(`responds with 200 and an empty list`, () => {
+                        return supertest(app)
+                            .get('/lyrics')
+                            .expect(200, [])
+                    })
+                })
+            })
+            describe('GET /lyrics/:lyric_id', () => {
+                context('Given no lyrics', () => {
+                    it(`responds with 404`, () => {
+                        const lyricId = 123456
+                        return supertest(app)
+                            .get(`/lyrics/${lyricId}`)
+                            .expect(404, { error: { message: `Lyrics doesn't exist` } })
+                    })
+                })
+            })
+        })
+
     })
 })
