@@ -1,4 +1,4 @@
-const LyricService = require('../src/lyric-service')
+const LyricService = require('../src/Lyrics/lyric-service')
 const knex = require('knex')
 const { test } = require('mocha')
 const { expect } = require('chai')

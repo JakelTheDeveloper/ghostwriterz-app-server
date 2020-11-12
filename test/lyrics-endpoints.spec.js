@@ -4,7 +4,7 @@ const supertest = require('supertest')
 const app = require('../src/app')
 const { makeLyricsArray } = require('./lyrics.fixtures')
 
-describe.only('Articles Endpoints', function () {
+describe('Articles Endpoints', function () {
     let db
     before('make knex instance', () => {
         db = knex({
@@ -72,7 +72,7 @@ describe.only('Articles Endpoints', function () {
                 })
             })
             describe.only('POST /lyrics/', () => {
-                it('Creates lyrics, responding with 201 and new lyrics', function() {
+                it('Creates lyrics, responding with 201 and new lyrics', function () {
                     this.retries(3)
                     const newLyrics = {
                         title: "Boo",
@@ -99,6 +99,71 @@ describe.only('Articles Endpoints', function () {
                                 .get(`/lyrics/${postRes.body.id}`)
                                 .expect(postRes.body)
                         )
+                })
+                it(`responds with 400 and an error message when the 'title' is missing`, () => {
+                    return supertest(app)
+                        .post('/lyrics')
+                        .send({
+                            genre: 'Rap',
+                            mood:'Happy',
+                            artist:'Venus',
+                            lyrics: 'Test new article content...'
+                        })
+                        .expect(400, {
+                            error: { message: `Missing 'title' in request body` }
+                        })
+                })
+                it(`responds with 400 and an error message when the 'genre' is missing`, () => {
+                    return supertest(app)
+                        .post('/lyrics')
+                        .send({
+                            title: 'Foo',
+                            mood:'Happy',
+                            artist:'Venus',
+                            lyrics: 'Test new article content...'
+                        })
+                        .expect(400, {
+                            error: { message: `Missing 'genre' in request body` }
+                        })
+                })
+                it(`responds with 400 and an error message when the 'mood' is missing`, () => {
+                    return supertest(app)
+                        .post('/lyrics')
+                        .send({
+                            title: 'Foo',
+                            genre:'Rap',
+                            artist:'Venus',
+                            lyrics: 'Test new article content...'
+                        })
+                        .expect(400, {
+                            error: { message: `Missing 'mood' in request body` }
+                        })
+                })
+                it(`responds with 400 and an error message when the 'artist' is missing`, () => {
+                    return supertest(app)
+                        .post('/lyrics')
+                        .send({
+                            title: 'Foo',
+                            genre:'Rap',
+                            mood:'Sad',
+                            lyrics: 'Test new article content...'
+                        })
+                        .expect(400, {
+                            error: { message: `Missing 'artist name' in request body` }
+                        })
+                })
+                it(`responds with 400 and an error message when the 'lyrics' is missing`, () => {
+                    return supertest(app)
+                        .post('/lyrics')
+                        .send({
+                            title: 'Foo',
+                            genre:'Rap',
+                            mood:'Sad',
+                            artist: 'Neptune'
+                        })
+                        .expect(400, {
+                            error: { message: `Missing 'lyrics' in request body` }
+                        })
                 })
             })
         })

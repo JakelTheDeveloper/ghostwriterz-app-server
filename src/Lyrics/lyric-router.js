@@ -14,105 +14,141 @@ lyricRouter
   .route('/')
   .get((req, res, next) => {
     LyricService.getAllLyrics(req.app.get('db'))
-    .then(lyrics =>{
-      res.json(lyricData)
-    })
-    
+      .then(lyrics => {
+        res.json(lyrics)
+      })
+      .catch(next)
   })
-  .post(bodyParser, (req, res) => {
-    const { title, rating, genre, mood, artist, lyrics } = req.body;
-      if (!title) {
-        logger.error(`title is required`);
-        return res
-          .status(400)
-          .send('Invalid data');
-      }
-      if (!Number.isInteger(rating) || rating < 0 || rating > 5) {
-        logger.error(`Invalid rating '${rating}' supplied`)
-        return res.status(400).send(`'rating' must be a number between 0 and 5`)
-      }
-      if (!genre) {
-        logger.error(`Please select a genre for your lyrics`);
-        return res
-          .status(400)
-          .send('Please select a genre for your lyrics');
-      }
-      if (!mood) {
-        logger.error(`Please select a mood for your lyrics`);
-        return res
-          .status(400)
-          .send('Please select a mood for your lyrics');
-      }
-      if (!artist) {
-        logger.error(`Please provide an artist name for your lyrics`);
-        return res
-          .status(400)
-          .send('Please provide an artist name for your lyrics');
-      }
-      if (!lyrics) {
-        logger.error(`Please provide Lyrics`);
-        return res
-          .status(400)
-          .send('Please provide Lyrics');
-      }
-      // get an id
-      const id = uuid();
-    
-      const newLyrics = {
-        id,
-        title,
-        rating,
-        genre,
-        mood,
-        artist,
-        lyrics,
-        expanded:false
-      };
-    
-      lyricData.push(newLyrics);
-    
-      logger.info(`Lyrics with id ${id} created`);
-    
-      res
-        .status(201)
-        .location(`http://localhost:8000/lyrics/${id}`)
-        .json({id});
+  .post(bodyParser, (req, res, next) => {
+    const { title, genre, mood, artist, lyrics } = req.body;
+    // if (!title) {
+    //   logger.error(`title is required`);
+    //   return res
+    //     .status(400)
+    //     .send('Please enter a title for your lyrics!');
+    // }
+    // if (!genre) {
+    //   logger.error(`genre is required`);
+    //   return res
+    //     .status(400)
+    //     .send('Please select a genre for your lyrics!');
+    // }
+    // if (!mood) {
+    //   logger.error(`mood is required`);
+    //   return res
+    //     .status(400)
+    //     .send('Please select a mood for your lyrics!');
+    // }
+    // if (!artist) {
+    //   logger.error(`artist name is required`);
+    //   return res
+    //     .status(400)
+    //     .send('Please provide an artist name for your lyrics!');
+    // }
+    // if (!lyrics) {
+    //   logger.error(`lyrics is required`);
+    //   return res
+    //     .status(400)
+    //     .send('Please provide Lyrics!');
+    // }
+    // // get an id
+    // const id = uuid();
+
+    // const newLyrics = {
+    //   id,
+    //   title,
+    //   genre,
+    //   mood,
+    //   artist,
+    //   lyrics,
+    //   expanded: false
+    // };
+
+    const newLyrics = { title, genre, mood, artist, lyrics }
+    if (!title) {
+      return res.status(400).json({
+        error: { message: `Missing 'title' in request body` }
+      })
+    }
+    if (!genre) {
+      return res.status(400).json({
+        error: { message: `Missing 'genre' in request body` }
+      })
+    }
+    if (!mood) {
+      return res.status(400).json({
+        error: { message: `Missing 'mood' in request body` }
+      })
+    }
+    if (!artist) {
+      return res.status(400).json({
+        error: { message: `Missing 'artist name' in request body` }
+      })
+    }
+    if (!lyrics) {
+      return res.status(400).json({
+        error: { message: `Missing 'lyrics' in request body` }
+      })
+    }
+    LyricService.insertLyrics(
+      req.app.get('db'),
+      newLyrics
+    )
+      .then(lyrics => {
+        res
+          .status(201)
+          .location(`/lyrics/${lyrics.id}`)
+          .json(lyrics)
+      })
+      .catch(next)
+    // logger.info(`Lyrics with id ${lyrics.id} created`);
   })
 
-  lyricRouter
-  .route('/lyrics/:id')
-  .get((req, res) => {
+//     lyricData.push(newLyrics);
+
+//     logger.info(`Lyrics with id ${id} created`);
+
+//     res
+//       .status(201)
+//       .location(`http://localhost:8000/lyrics/${id}`)
+//       .json({id});
+// })
+
+lyricRouter
+  .route('/:lyric_id')
+  .get((req, res, next) => {
+    const knexInstance = req.app.get('db')
+    LyricService.getById(knexInstance, req.params.lyric_id)
+      .then(lyric => {
+        if (!lyric) {
+          return res.status(404).json({
+            error: { message: `Lyrics doesn't exist` }
+          })
+        }
+        res.json(lyric)
+      })
+      .catch(next)
+  })
+
+
+  .delete((req, res) => {
     const { id } = req.params;
-    const lyric = lyricData.find(lyric => lyric.id == id);
-  
-    // make sure we found a card
-    if (!lyric) {
+
+    const lyricIndex = lyricData.findIndex(li => li.id == id);
+
+    if (lyricIndex === -1) {
       logger.error(`Lyrics with id ${id} not found.`);
       return res
         .status(404)
-        .send('Lyrics Not Found');
+        .send('Not Found');
     }
-  
-    res.json(lyric);
-  })
-  .delete((req, res) => {
-    const { id } = req.params;
-    
-      const lyricIndex = lyricData.findIndex(li => li.id == id);
-    
-      if (lyricIndex === -1) {
-        logger.error(`Lyrics with id ${id} not found.`);
-        return res
-          .status(404)
-          .send('Not Found');
-      }
-    
-      lyricData.splice(lyricIndex, 1);
-    
-      logger.info(`Lyrics with id ${id} deleted.`);
-      res
-        .status(204)
-        .end();
+
+    lyricData.splice(lyricIndex, 1);
+
+    logger.info(`Lyrics with id ${id} deleted.`);
+    res
+      .status(204)
+      .end();
   })
 
 module.exports = lyricRouter

@@ -5,57 +5,16 @@ const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const lyricRouter = require('./Lyrics/lyric-router')
-
-
 const app = express()
-const jsonParser = express.json()
 
-app.get('/', (req, res, next) => {
+
+
+
+app.get('/', (req, res) => {
   res.send('Hello, world!')
 })
 
-app.get('/lyrics', (req, res, next) => {
-  const knexInstance = req.app.get('db')
-  LyricService.getAllLyrics(knexInstance)
-    .then(lyrics => {
-      res.json(lyrics)
-    })
-    .catch(next)
-})
-
-app.get('/lyrics/:lyric_id', (req, res, next) => {
-  const knexInstance = req.app.get('db')
-  LyricService.getById(knexInstance, req.params.lyric_id)
-    .then(lyric => {
-      if (!lyric) {
-        return res.status(404).json({
-          error: { message: `Lyrics doesn't exist` }
-        })
-      }
-      res.json(lyric)
-    })
-    .catch(next)
-})
-
-app.post('/lyrics', jsonParser, (req, res, next) => {
-  const { title, genre, mood, artist, lyrics } = req.body
-  const newLyrics = { title, genre, mood, artist, lyrics }
-  LyricService.insertLyrics(
-    req.app.get('db'),
-    newLyrics
-  )
-    .then(lyrics => {
-      res
-        .status(201)
-        .location(`/lyrics/${lyrics.id}`)
-        .json(lyrics)
-    })
-    .catch(next)
-})
-
-
-
-app.use(lyricRouter);
+app.use('/lyrics', lyricRouter)
 
 //Set Up validate Token
 app.use(function validateBearerToken(req, res, next) {
@@ -69,9 +28,6 @@ app.use(function validateBearerToken(req, res, next) {
   // move to the next middleware
   next()
 })
-
-
-
 
 
 
@@ -90,9 +46,10 @@ const morganOption = (NODE_ENV === 'production')
   ? 'tiny'
   : 'common';
 
-app.use(morgan(morganOption))
-app.use(helmet())
+  app.use(morgan(morganOption))
+  app.use(helmet())
 app.use(cors())
+
 
 module.exports = app
 
