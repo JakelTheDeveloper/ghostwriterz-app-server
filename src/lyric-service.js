@@ -4,7 +4,7 @@ const LyricService = {
     getAllLyrics(knex) {
         return knex.select('*').from('lyric_data')
     },
-    insertLyric(knex, newLyric) {
+    insertLyrics(knex, newLyric) {
         // return Promise.resolve({})
         return knex
             .insert(newLyric)

@@ -122,7 +122,7 @@ describe(`Articles service object`, function () {
                 artist: "Foo",
                 lyrics: "Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis"
             }
-            return LyricService.insertLyric(db, newLyric)
+            return LyricService.insertLyrics(db, newLyric)
                 .then(actual => {
                     expect(actual).to.eql({
                         id: 1,

@@ -13,7 +13,20 @@ const knexInstance = knex({
   connection: process.env.DB_URL,
 })
 
-// console.log(LyricService.getAllArticles())
+//Set Up validate Token
+app.use(function validateBearerToken(req, res, next) {
+  const apiToken = process.env.API_TOKEN
+  const authToken = req.get('Authorization')
+
+  if (!authToken || authToken.split(' ')[1] !== apiToken) {
+    logger.error(`Unauthorized request to path: ${req.path}`);
+    return res.status(401).json({ error: 'Unauthorized request' })
+  }
+  // move to the next middleware
+  next()
+})
+
+// console.log(LyricService.getAllLyrics())
 
 // knexInstance.from('lyric_data').select('*')
 // .then(result =>{
@@ -54,34 +67,46 @@ function paginateLyrics(page) {
       console.log(result)
     })
 }
-
 // paginateLyrics(1)
-
 // searchByTitle('ow')
+
+// use all the LyricService methods!!
+LyricService.getAllLyrics(knexInstance)
+  .then(lyrics => console.log(lyrics))
+  .then(() =>
+    LyricService.insertLyrics(knexInstance, {
+      title: "Hello",
+      genre: "Rap",
+      mood: "Happy",
+      artist: "Foo",
+      lyrics: "Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis"
+  })
+  )
+  .then(newLyric => {
+    console.log(newLyric)
+    return LyricService.updateLyrics(
+      knexInstance,
+      newLyric.id,
+      {
+        title: "Updated Title",
+      }
+    ).then(() => LyricService.getById(knexInstance, newLyric.id))
+  })
+  .then(lyric => {
+    console.log(lyric)
+    return LyricService.deleteLyrics(knexInstance, lyric.id)
+  })
 
 
 
 const app = express()
 
-app.get('/', (req, res) => {
-  res.send('Hello, world!')
- })
-
+// app.get('/', (req, res) => {
+//   res.send('Hello, world!')
+//  })
      
 app.use(lyricRouter);
 
-//Set Up validate Token
-app.use(function validateBearerToken(req, res, next) {
-  const apiToken = process.env.API_TOKEN
-  const authToken = req.get('Authorization')
-
-  if (!authToken || authToken.split(' ')[1] !== apiToken) {
-    logger.error(`Unauthorized request to path: ${req.path}`);
-    return res.status(401).json({ error: 'Unauthorized request' })
-  }
-  // move to the next middleware
-  next()
-})
 
      app.use(function errorHandler(error, req, res, next) {
            let response
