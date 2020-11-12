@@ -5,16 +5,10 @@ const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const lyricRouter = require('./Lyrics/lyric-router')
-// const knex = require('knex')
-const LyricService = require('./lyric-service')
-
-// const knexInstance = knex({
-//   client: 'pg',
-//   connection: process.env.DB_URL,
-// })
 
 
 const app = express()
+const jsonParser = express.json()
 
 app.get('/', (req, res, next) => {
   res.send('Hello, world!')
@@ -33,12 +27,28 @@ app.get('/lyrics/:lyric_id', (req, res, next) => {
   const knexInstance = req.app.get('db')
   LyricService.getById(knexInstance, req.params.lyric_id)
     .then(lyric => {
-      if(!lyric){
+      if (!lyric) {
         return res.status(404).json({
-          error:{message:`Lyrics doesn't exist`}
+          error: { message: `Lyrics doesn't exist` }
         })
       }
       res.json(lyric)
+    })
+    .catch(next)
+})
+
+app.post('/lyrics', jsonParser, (req, res, next) => {
+  const { title, genre, mood, artist, lyrics } = req.body
+  const newLyrics = { title, genre, mood, artist, lyrics }
+  LyricService.insertLyrics(
+    req.app.get('db'),
+    newLyrics
+  )
+    .then(lyrics => {
+      res
+        .status(201)
+        .location(`/lyrics/${lyrics.id}`)
+        .json(lyrics)
     })
     .catch(next)
 })

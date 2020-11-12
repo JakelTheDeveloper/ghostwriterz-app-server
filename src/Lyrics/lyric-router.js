@@ -1,14 +1,23 @@
 const express = require('express')
-const { v4: uuid } = require('uuid')
+const LyricService = require('./lyric-service')
 const lyricRouter = express.Router()
-const logger = require('../logger')
-const lyricData = require('../store')
 const bodyParser = express.json()
 
+const { v4: uuid } = require('uuid')
+
+const logger = require('../logger')
+const lyricData = require('../store')
+
+
+
 lyricRouter
-  .route('/lyrics')
-  .get((req, res) => {
-    res.json(lyricData)
+  .route('/')
+  .get((req, res, next) => {
+    LyricService.getAllLyrics(req.app.get('db'))
+    .then(lyrics =>{
+      res.json(lyricData)
+    })
+    
   })
   .post(bodyParser, (req, res) => {
     const { title, rating, genre, mood, artist, lyrics } = req.body;

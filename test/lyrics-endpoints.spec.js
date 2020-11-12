@@ -1,5 +1,6 @@
 const { expect } = require('chai')
 const knex = require('knex')
+const supertest = require('supertest')
 const app = require('../src/app')
 const { makeLyricsArray } = require('./lyrics.fixtures')
 
@@ -68,6 +69,36 @@ describe.only('Articles Endpoints', function () {
                             .get(`/lyrics/${lyricId}`)
                             .expect(404, { error: { message: `Lyrics doesn't exist` } })
                     })
+                })
+            })
+            describe.only('POST /lyrics/', () => {
+                it('Creates lyrics, responding with 201 and new lyrics', function() {
+                    this.retries(3)
+                    const newLyrics = {
+                        title: "Boo",
+                        genre: "Rap",
+                        mood: "Happy",
+                        artist: "Neptune",
+                        lyrics: "Pumbay gdf nergui ergunggs egndfuigner gndfignerg egnerigne gnriegnfg ngieng gnreign erngiengien gerging e gerignagrng renairugnafginerug geau gniergrag naginreaig nergungaringpnergunbdf giuerugngngnargd"
+                    }
+                    return supertest(app)
+                        .post('/lyrics')
+                        .send(newLyrics)
+                        .expect(201)
+                        .expect(res => {
+                            expect(res.body.title).to.eql(newLyrics.title)
+                            expect(res.body.genre).to.eql(newLyrics.genre)
+                            expect(res.body.mood).to.eql(newLyrics.mood)
+                            expect(res.body.artist).to.eql(newLyrics.artist)
+                            expect(res.body.lyrics).to.eql(newLyrics.lyrics)
+                            expect(res.body).to.have.property('id')
+                            expect(res.headers.location).to.eql(`/lyrics/${res.body.id}`)
+                        })
+                        .then(postRes =>
+                            supertest(app)
+                                .get(`/lyrics/${postRes.body.id}`)
+                                .expect(postRes.body)
+                        )
                 })
             })
         })
