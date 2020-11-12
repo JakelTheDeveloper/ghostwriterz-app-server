@@ -13,7 +13,7 @@ const knexInstance = knex({
   connection: process.env.DB_URL,
 })
 
-console.log(LyricService.getAllArticles())
+// console.log(LyricService.getAllArticles())
 
 // knexInstance.from('lyric_data').select('*')
 // .then(result =>{
@@ -67,6 +67,8 @@ app.get('/', (req, res) => {
   res.send('Hello, world!')
  })
 
+     
+app.use(lyricRouter);
 
 //Set Up validate Token
 app.use(function validateBearerToken(req, res, next) {
@@ -80,11 +82,6 @@ app.use(function validateBearerToken(req, res, next) {
   // move to the next middleware
   next()
 })
-
-     
-app.use(lyricRouter);
-
-
 
      app.use(function errorHandler(error, req, res, next) {
            let response

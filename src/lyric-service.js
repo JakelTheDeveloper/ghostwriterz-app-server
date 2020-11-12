@@ -1,6 +1,8 @@
+const knex = require("knex")
+
 const LyricService = {
-    getAllArticles(){
-        return 'all the articles'
+    getAllArticles(knex){
+        return knex.select('*').from('lyric_data')
     }
 }
 
