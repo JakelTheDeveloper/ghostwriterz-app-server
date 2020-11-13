@@ -97,7 +97,7 @@ describe(`Lyrics service object`, function () {
                 artist: 'updated artist',
                 lyrics: 'updated lyrics'
             }
-            return LyricService.updateLyrics(db, idOfLyricsToUpdate, newsLyricData)
+            return LyricService.updateLyrics(db, idOfLyricsToUpdate, newLyricsData)
                 .then(() => LyricService.getById(db, idOfLyricsToUpdate))
                 .then(lyrics => {
                     expect(lyrics).to.eql({
@@ -116,21 +116,21 @@ describe(`Lyrics service object`, function () {
         })
         it(`insertLyric() inserts a new lyric and resolves the new lyric with an 'id'`, () => {
             const newLyrics = {
-                title: "Hello",
-                genre: "Rap",
-                mood: "Happy",
-                artist: "Foo",
-                lyrics: "Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis"
+                title: 'Hello',
+                genre: 'Rap',
+                mood: 'Happy',
+                artist: 'Foo',
+                lyrics: 'Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis'
             }
             return LyricService.insertLyrics(db, newLyrics)
                 .then(actual => {
                     expect(actual).to.eql({
                         id: 1,
-                        title: "Hello",
-                        genre: "Rap",
-                        mood: "Happy",
-                        artist: "Foo",
-                        lyrics: "Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis"
+                        title: 'Hello',
+                        genre: 'Rap',
+                        mood: 'Happy',
+                        artist: 'Foo',
+                        lyrics: 'Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis'
                     })
                 })
         })

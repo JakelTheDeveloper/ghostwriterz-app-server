@@ -34,7 +34,7 @@ describe('Lyrics Endpoints', function () {
                     .expect(200, testData)
             })
         })
-        describe('GET /lyrics/:lyrics_id', () => {
+        describe('GET /lyrics/:lyric_id', () => {
             context(`Given an XSS attack lyrics`, () => {
                 const maliciousLyrics = {
                     id: 911,
@@ -88,7 +88,7 @@ describe('Lyrics Endpoints', function () {
                     })
                 })
             })
-            describe('GET /lyrics/:lyrics_id', () => {
+            describe('GET /lyrics/:lyric_id', () => {
                 context('Given no lyrics', () => {
                     it(`responds with 404`, () => {
                         const lyricId = 123456
@@ -165,7 +165,7 @@ describe('Lyrics Endpoints', function () {
                 // })
             })
         })
-        describe.only(`DELETE /lyrics/:lyrics_id`, () => {
+        describe(`DELETE /lyrics/:lyric_id`, () => {
             context('Given there are lyrics in the database', () => {
                 const testLyrics = makeLyricsArray()
 
@@ -186,14 +186,6 @@ describe('Lyrics Endpoints', function () {
                                 .get(`/lyrics`)
                                 .expect(expectedLyrics)
                         )
-                })
-                context(`Given no lyrics`, () => {
-                    it(`responds with 404`, () => {
-                        const lyricsId = 123456
-                        return supertest(app)
-                            .delete(`/lyrics/${lyricsId}`)
-                            .expect(404, { error: { message: `Lyrics doesn't exist` } })
-                    })
                 })
             })
         })
