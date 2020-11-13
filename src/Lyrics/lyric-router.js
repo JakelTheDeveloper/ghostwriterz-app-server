@@ -94,6 +94,9 @@ LyricsRouter
            })
          .catch(next)
   })
+  .patch((req,res)=>{
+    res.status(204).end()
+  })
 
   // .delete((req, res) => {
   //   const { id } = req.params;

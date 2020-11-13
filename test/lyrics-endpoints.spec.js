@@ -188,6 +188,40 @@ describe('Lyrics Endpoints', function () {
                         )
                 })
             })
+            describe.only(`PATCH /api/lyrics/:lyric_id`, () => {
+                context(`Given no lyrics`, () => {
+                    it(`responds with 404`, () => {
+                        const lyricId = 123456
+                        return supertest(app)
+                            .patch(`/api/lyrics/${lyricId}`)
+                            .expect(404, { error: { message: `Lyrics doesn't exist` } })
+                    })
+                })
+                context('Given there are Lyrics in the database', () => {
+                    const testLyrics = makeLyricsArray()
+
+                    beforeEach('insert lyrics', () => {
+                        return db
+                            .into('lyric_data')
+                            .insert(testLyrics)
+                    })
+
+                    it('responds with 204 and updates the lyrics', () => {
+                        const idToUpdate = 2
+                        const updateLyrics = {
+                            title: "updated title",
+                            genre: "updated genre",
+                            mood: "updated mood",
+                            artist: "updated artist",
+                            lyrics: "updated lyrics"
+                        }
+                        return supertest(app)
+                            .patch(`/api/lyrics/${idToUpdate}`)
+                            .send(updateLyrics)
+                            .expect(204)
+                    })
+                })
+            })
         })
     })
 })
