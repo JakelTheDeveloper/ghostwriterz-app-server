@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const LyricsService = require('./lyric-service')
 const LyricsRouter = express.Router()
@@ -38,7 +39,7 @@ LyricsRouter
       .then(lyrics => {
         res
           .status(201)
-          .location(`/lyrics/${lyrics.id}`)
+          .location(path.posix.join(req.originalUrl + `/${lyrics.id}`))
           .json(lyrics)
       })
       .catch(next)

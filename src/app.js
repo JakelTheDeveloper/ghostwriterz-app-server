@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
   res.send('Hello, world!')
 })
 
-app.use('/lyrics', lyricRouter)
+app.use('/api/lyrics', lyricRouter)
 
 //Set Up validate Token
 app.use(function validateBearerToken(req, res, next) {
