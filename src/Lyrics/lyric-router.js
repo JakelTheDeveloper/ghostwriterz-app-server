@@ -57,25 +57,31 @@ lyricRouter
 
 lyricRouter
   .route('/:lyric_id')
-  .get((req, res, next) => {
-    const knexInstance = req.app.get('db')
-    LyricService.getById(knexInstance, req.params.lyric_id)
-      .then(lyric => {
-        if (!lyric) {
-          return res.status(404).json({
-            error: { message: `Lyrics doesn't exist` }
-          })
-        }
-        res.json({
-          id: lyric.id,
-          title: xss(lyric.title),
-          genre: lyric.genre, // sanitize title
-          mood: lyric.mood, // sanitize content
-          artist: xss(lyric.artist),
-          lyrics: xss(lyric.lyrics) 
-        })
+  .all((req,res,next)=>{
+    LyricService.getById(
+      req.app.get('db'),
+      req.params.lyric_id
+      )
+  .then(lyrics => {
+    if (!lyrics) {
+      return res.status(404).json({
+        error: { message: `Lyrics doesn't exist` }
       })
-      .catch(next)
+    }
+    res.lyrics = lyrics // save lyric as lyric for later use
+    next()
+  })
+  .catch(next)
+  })
+  .get((req, res, next) => {
+        res.json({
+          id: res.lyrics.id,
+          title: xss(res.lyrics.title),
+          genre: res.lyrics.genre, // sanitize title
+          mood: res.lyrics.mood, // sanitize content
+          artist: xss(res.lyrics.artist),
+          lyrics: xss(res.lyrics.lyrics) 
+        })
   })
   .delete((req, res, next) => {
     LyricService.deleteLyrics(
