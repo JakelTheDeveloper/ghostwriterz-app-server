@@ -58,64 +58,84 @@ LyricsRouter
 
 LyricsRouter
   .route('/:lyric_id')
-  .all((req,res,next)=>{
+  .all((req, res, next) => {
     LyricsService.getById(
       req.app.get('db'),
       req.params.lyric_id
-      )
-  .then(lyrics => {
-    if (!lyrics) {
-      return res.status(404).json({
-        error: { message: `Lyrics doesn't exist` }
+    )
+      .then(lyrics => {
+        if (!lyrics) {
+          return res.status(404).json({
+            error: { message: `Lyrics doesn't exist` }
+          })
+        }
+        res.lyrics = lyrics // save lyric as lyric for later use
+        next()
       })
-    }
-    res.lyrics = lyrics // save lyric as lyric for later use
-    next()
-  })
-  .catch(next)
+      .catch(next)
   })
   .get((req, res, next) => {
-        res.json({
-          id: res.lyrics.id,
-          title: xss(res.lyrics.title),
-          genre: res.lyrics.genre, // sanitize title
-          mood: res.lyrics.mood, // sanitize content
-          artist: xss(res.lyrics.artist),
-          lyrics: xss(res.lyrics.lyrics) 
-        })
+    res.json({
+      id: res.lyrics.id,
+      title: xss(res.lyrics.title),
+      genre: res.lyrics.genre, // sanitize title
+      mood: res.lyrics.mood, // sanitize content
+      artist: xss(res.lyrics.artist),
+      lyrics: xss(res.lyrics.lyrics)
+    })
   })
   .delete((req, res, next) => {
     LyricsService.deleteLyrics(
-          req.app.get('db'),
-           req.params.lyric_id
-         )
-           .then(() => {
-             res.status(204).end()
-           })
-         .catch(next)
+      req.app.get('db'),
+      req.params.lyric_id
+    )
+      .then(() => {
+        res.status(204).end()
+      })
+      .catch(next)
   })
-  .patch((req,res)=>{
-    res.status(204).end()
+  .patch(bodyParser, (req, res, next) => {
+    const { title, genre, mood, artist, lyrics } = req.body
+    const lyricsToUpdate = { title, genre, mood, artist, lyrics }
+
+    const numberOfValues = Object.values(lyricsToUpdate).filter(Boolean).length
+    if (numberOfValues === 0) {
+      return res.status(400).json({
+        error: {
+          message: `Request body must contain either 'title', 'genre', 'mood', 'artist' or 'lyrics'`
+        }
+      })
+    }
+
+    LyricsService.updateLyrics(
+      req.app.get('db'),
+      req.params.lyric_id,
+      lyricsToUpdate
+    )
+      .then(numRowsAffected => {
+        res.status(204).end()
+      })
+      .catch(next)
   })
 
-  // .delete((req, res) => {
-  //   const { id } = req.params;
+// .delete((req, res) => {
+//   const { id } = req.params;
 
-  //   const lyricIndex = lyricData.findIndex(li => li.id == id);
+//   const lyricIndex = lyricData.findIndex(li => li.id == id);
 
-  //   if (lyricIndex === -1) {
-  //     logger.error(`Lyrics with id ${id} not found.`);
-  //     return res
-  //       .status(404)
-  //       .send('Not Found');
-  //   }
+//   if (lyricIndex === -1) {
+//     logger.error(`Lyrics with id ${id} not found.`);
+//     return res
+//       .status(404)
+//       .send('Not Found');
+//   }
 
-  //   lyricData.splice(lyricIndex, 1);
+//   lyricData.splice(lyricIndex, 1);
 
-  //   logger.info(`Lyrics with id ${id} deleted.`);
-  //   res
-  //     .status(204)
-  //     .end();
-  // })
+//   logger.info(`Lyrics with id ${id} deleted.`);
+//   res
+//     .status(204)
+//     .end();
+// })
 
 module.exports = LyricsRouter
