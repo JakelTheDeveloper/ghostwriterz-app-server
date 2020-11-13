@@ -1,6 +1,6 @@
 const knex = require("knex")
 
-const LyricService = {
+const LyricsService = {
     getAllLyrics(knex) {
         return knex.select('*').from('lyric_data')
     },
@@ -34,4 +34,4 @@ const LyricService = {
     },
 }
 
-module.exports = LyricService
+module.exports = LyricsService

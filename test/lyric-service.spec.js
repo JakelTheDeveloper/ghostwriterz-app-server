@@ -1,4 +1,4 @@
-const LyricService = require('../src/Lyrics/lyric-service')
+const LyricsService = require('../src/Lyrics/lyric-service')
 const knex = require('knex')
 const { test } = require('mocha')
 const { expect } = require('chai')
@@ -57,7 +57,7 @@ describe(`Lyrics service object`, function () {
 
         it(`getAllLyrics() resolves all lyrics from 'lyrics_data' table`, () => {
             // test that ArticlesService.getAllArticles gets data from table
-            return LyricService.getAllLyrics(db)
+            return LyricsService.getAllLyrics(db)
                 .then(actual => {
                     expect(actual).to.eql(testData)
                 })
@@ -66,7 +66,7 @@ describe(`Lyrics service object`, function () {
         it(`getById() resolves lyric by id from 'lyric_data' table`, () => {
             const thirdId = 3
             const thirdTestLyrics = testData[thirdId - 1]
-            return LyricService.getById(db, thirdId)
+            return LyricsService.getById(db, thirdId)
                 .then(actual => {
                     expect(actual).to.eql({
                         id: thirdId,
@@ -80,8 +80,8 @@ describe(`Lyrics service object`, function () {
         })
         it(`deleteLyric() removes lyric by id from 'lyric_data' table`, () => {
             const lyricsId = 3
-            return LyricService.deleteLyrics(db, lyricsId)
-                .then(() => LyricService.getAllLyrics(db))
+            return LyricsService.deleteLyrics(db, lyricsId)
+                .then(() => LyricsService.getAllLyrics(db))
                 .then(allLyrics => {
                     // copy the test lyrics array without the "deleted" lyric
                     const expected = testData.filter(lyrics => lyrics.id !== lyricsId)
@@ -97,8 +97,8 @@ describe(`Lyrics service object`, function () {
                 artist: 'updated artist',
                 lyrics: 'updated lyrics'
             }
-            return LyricService.updateLyrics(db, idOfLyricsToUpdate, newLyricsData)
-                .then(() => LyricService.getById(db, idOfLyricsToUpdate))
+            return LyricsService.updateLyrics(db, idOfLyricsToUpdate, newLyricsData)
+                .then(() => LyricsService.getById(db, idOfLyricsToUpdate))
                 .then(lyrics => {
                     expect(lyrics).to.eql({
                         id: idOfLyricsToUpdate,
@@ -109,7 +109,7 @@ describe(`Lyrics service object`, function () {
     })
     context(`Given 'lyric_data' has no data`, () => {
         it(`getAllLyrics() resolves an empty array`, () => {
-            return LyricService.getAllLyrics(db)
+            return LyricsService.getAllLyrics(db)
                 .then(actual => {
                     expect(actual).to.eql([])
                 })
@@ -122,7 +122,7 @@ describe(`Lyrics service object`, function () {
                 artist: 'Foo',
                 lyrics: 'Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis'
             }
-            return LyricService.insertLyrics(db, newLyrics)
+            return LyricsService.insertLyrics(db, newLyrics)
                 .then(actual => {
                     expect(actual).to.eql({
                         id: 1,

@@ -1,6 +1,6 @@
 const express = require('express')
-const LyricService = require('./lyric-service')
-const lyricRouter = express.Router()
+const LyricsService = require('./lyric-service')
+const LyricsRouter = express.Router()
 const bodyParser = express.json()
 const xss = require('xss')
 
@@ -11,10 +11,10 @@ const lyricData = require('../store')
 
 
 
-lyricRouter
+LyricsRouter
   .route('/')
   .get((req, res, next) => {
-    LyricService.getAllLyrics(req.app.get('db'))
+    LyricsService.getAllLyrics(req.app.get('db'))
       .then(lyrics => {
         res.json(lyrics)
       })
@@ -31,7 +31,7 @@ lyricRouter
       }
     }
 
-    LyricService.insertLyrics(
+    LyricsService.insertLyrics(
       req.app.get('db'),
       newLyrics
     )
@@ -55,10 +55,10 @@ lyricRouter
 //       .json({id});
 // })
 
-lyricRouter
+LyricsRouter
   .route('/:lyric_id')
   .all((req,res,next)=>{
-    LyricService.getById(
+    LyricsService.getById(
       req.app.get('db'),
       req.params.lyric_id
       )
@@ -84,7 +84,7 @@ lyricRouter
         })
   })
   .delete((req, res, next) => {
-    LyricService.deleteLyrics(
+    LyricsService.deleteLyrics(
           req.app.get('db'),
            req.params.lyric_id
          )
@@ -114,4 +114,4 @@ lyricRouter
   //     .end();
   // })
 
-module.exports = lyricRouter
+module.exports = LyricsRouter
