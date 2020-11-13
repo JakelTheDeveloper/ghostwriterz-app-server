@@ -9,6 +9,48 @@ const { v4: uuid } = require('uuid')
 const logger = require('../logger')
 const lyricData = require('../store')
 
+// if (!title) {
+//   logger.error(`title is required`);
+//   return res
+//     .status(400)
+//     .send('Please enter a title for your lyrics!');
+// }
+// if (!genre) {
+//   logger.error(`genre is required`);
+//   return res
+//     .status(400)
+//     .send('Please select a genre for your lyrics!');
+// }
+// if (!mood) {
+//   logger.error(`mood is required`);
+//   return res
+//     .status(400)
+//     .send('Please select a mood for your lyrics!');
+// }
+// if (!artist) {
+//   logger.error(`artist name is required`);
+//   return res
+//     .status(400)
+//     .send('Please provide an artist name for your lyrics!');
+// }
+// if (!lyrics) {
+//   logger.error(`lyrics is required`);
+//   return res
+//     .status(400)
+//     .send('Please provide Lyrics!');
+// }
+// // get an id
+// const id = uuid();
+
+// const newLyrics = {
+//   id,
+//   title,
+//   genre,
+//   mood,
+//   artist,
+//   lyrics,
+//   expanded: false
+// };
 
 
 lyricRouter
@@ -22,48 +64,6 @@ lyricRouter
   })
   .post(bodyParser, (req, res, next) => {
     const { title, genre, mood, artist, lyrics } = req.body;
-    // if (!title) {
-    //   logger.error(`title is required`);
-    //   return res
-    //     .status(400)
-    //     .send('Please enter a title for your lyrics!');
-    // }
-    // if (!genre) {
-    //   logger.error(`genre is required`);
-    //   return res
-    //     .status(400)
-    //     .send('Please select a genre for your lyrics!');
-    // }
-    // if (!mood) {
-    //   logger.error(`mood is required`);
-    //   return res
-    //     .status(400)
-    //     .send('Please select a mood for your lyrics!');
-    // }
-    // if (!artist) {
-    //   logger.error(`artist name is required`);
-    //   return res
-    //     .status(400)
-    //     .send('Please provide an artist name for your lyrics!');
-    // }
-    // if (!lyrics) {
-    //   logger.error(`lyrics is required`);
-    //   return res
-    //     .status(400)
-    //     .send('Please provide Lyrics!');
-    // }
-    // // get an id
-    // const id = uuid();
-
-    // const newLyrics = {
-    //   id,
-    //   title,
-    //   genre,
-    //   mood,
-    //   artist,
-    //   lyrics,
-    //   expanded: false
-    // };
 
     const newLyrics = { title, genre, mood, artist, lyrics }
     for (const [key, value] of Object.entries(newLyrics)) {
@@ -99,47 +99,59 @@ lyricRouter
 // })
 
 lyricRouter
-  .route('/:lyric_id')
-  .get((req, res, next) => {
-    const knexInstance = req.app.get('db')
-    LyricService.getById(knexInstance, req.params.lyric_id)
-      .then(lyric => {
-        if (!lyric) {
+  .route('/:lyrics_id')
+  .all((req, res, next) => {
+    LyricService.getById(req.app.get('db'), req.params.lyrics_id)
+      .then(lyrics => {
+        if (!lyrics) {
           return res.status(404).json({
             error: { message: `Lyrics doesn't exist` }
           })
         }
-        res.json({
-          id: lyric.id,
-          title: xss(lyric.title),
-          genre: lyric.genre, // sanitize title
-          mood: lyric.mood, // sanitize content
-          artist: xss(lyric.artist),
-          lyrics: xss(lyric.lyrics) 
-        })
+        res.lyrics = lyrics //save lyrics for next middleware
+        next()
+      })
+      .catch(next)
+  })
+  .get((req, res, next) => {
+    res.json({
+      id: lyrics.id,
+      title: xss(lyrics.title),
+      genre: lyrics.genre, // sanitize title
+      mood: lyrics.mood, // sanitize content
+      artist: xss(lyrics.artist),
+      lyrics: xss(lyrics.lyrics)
+    })
+  })
+  .delete((req, res, next) => {
+    LyricService.deleteLyrics(
+      req.app.get('db'),
+      req.params.lyrics_id
+    )
+      .then(() => {
+        res.status(204).end()
       })
       .catch(next)
   })
 
+////Delete
+// const { id } = req.params;
 
-  .delete((req, res) => {
-    const { id } = req.params;
+// const lyricIndex = lyricData.findIndex(li => li.id == id);
 
-    const lyricIndex = lyricData.findIndex(li => li.id == id);
+// if (lyricIndex === -1) {
+//   logger.error(`Lyrics with id ${id} not found.`);
+//   return res
+//     .status(404)
+//     .send('Not Found');
+// }
 
-    if (lyricIndex === -1) {
-      logger.error(`Lyrics with id ${id} not found.`);
-      return res
-        .status(404)
-        .send('Not Found');
-    }
+// lyricData.splice(lyricIndex, 1);
 
-    lyricData.splice(lyricIndex, 1);
+// logger.info(`Lyrics with id ${id} deleted.`);
+// res
+//   .status(204)
+//   .end();
 
-    logger.info(`Lyrics with id ${id} deleted.`);
-    res
-      .status(204)
-      .end();
-  })
 
 module.exports = lyricRouter

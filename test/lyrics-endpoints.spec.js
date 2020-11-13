@@ -4,7 +4,7 @@ const supertest = require('supertest')
 const app = require('../src/app')
 const { makeLyricsArray } = require('./lyrics.fixtures')
 
-describe('Articles Endpoints', function () {
+describe('Lyrics Endpoints', function () {
     let db
     before('make knex instance', () => {
         db = knex({
@@ -28,15 +28,15 @@ describe('Articles Endpoints', function () {
                     .into('lyric_data')
                     .insert(testData)
             })
-            it('responds with 200 of all articles', () => {
+            it('responds with 200 of all lyrics', () => {
                 return supertest(app)
                     .get('/lyrics')
                     .expect(200, testData)
             })
         })
-        describe.only('GET /lyrics/:lyric_id', () => {
-            context(`Given an XSS attack article`, () => {
-                const maliciousArticle = {
+        describe('GET /lyrics/:lyrics_id', () => {
+            context(`Given an XSS attack lyrics`, () => {
+                const maliciousLyrics = {
                     id: 911,
                     title: "Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;",
                     genre: "Rap",
@@ -48,12 +48,12 @@ describe('Articles Endpoints', function () {
                 beforeEach('insert malicious lyrics', () => {
                     return db
                         .into('lyric_data')
-                        .insert([maliciousArticle])
+                        .insert([maliciousLyrics])
                 })
 
                 it('removes XSS attack content', () => {
                     return supertest(app)
-                        .get(`/lyrics/${maliciousArticle.id}`)
+                        .get(`/lyrics/${maliciousLyrics.id}`)
                         .expect(200)
                         .expect(res => {
                             expect(res.body.title).to.eql('Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;')
@@ -88,7 +88,7 @@ describe('Articles Endpoints', function () {
                     })
                 })
             })
-            describe('GET /lyrics/:lyric_id', () => {
+            describe('GET /lyrics/:lyrics_id', () => {
                 context('Given no lyrics', () => {
                     it(`responds with 404`, () => {
                         const lyricId = 123456
@@ -165,6 +165,37 @@ describe('Articles Endpoints', function () {
                 // })
             })
         })
+        describe.only(`DELETE /lyrics/:lyrics_id`, () => {
+            context('Given there are lyrics in the database', () => {
+                const testLyrics = makeLyricsArray()
 
+                beforeEach('insert lyrics', () => {
+                    return db
+                        .into('lyric_data')
+                        .insert(testLyrics)
+                })
+
+                it('responds with 204 and removes the lyrics', () => {
+                    const idToRemove = 2
+                    const expectedLyrics = testLyrics.filter(lyrics => lyrics.id !== idToRemove)
+                    return supertest(app)
+                        .delete(`/lyrics/${idToRemove}`)
+                        .expect(204)
+                        .then(res =>
+                            supertest(app)
+                                .get(`/lyrics`)
+                                .expect(expectedLyrics)
+                        )
+                })
+                context(`Given no lyrics`, () => {
+                    it(`responds with 404`, () => {
+                        const lyricsId = 123456
+                        return supertest(app)
+                            .delete(`/lyrics/${lyricsId}`)
+                            .expect(404, { error: { message: `Lyrics doesn't exist` } })
+                    })
+                })
+            })
+        })
     })
 })
