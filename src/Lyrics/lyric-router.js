@@ -65,31 +65,14 @@ lyricRouter
     // };
 
     const newLyrics = { title, genre, mood, artist, lyrics }
-    if (!title) {
-      return res.status(400).json({
-        error: { message: `Missing 'title' in request body` }
-      })
+    for (const[key,value] of Object.entries(newLyrics)){
+      if(value == null){
+        return res.status(400).json({
+          error: { message: `Missing '${key}' in request body` }
+        })
+      }
     }
-    if (!genre) {
-      return res.status(400).json({
-        error: { message: `Missing 'genre' in request body` }
-      })
-    }
-    if (!mood) {
-      return res.status(400).json({
-        error: { message: `Missing 'mood' in request body` }
-      })
-    }
-    if (!artist) {
-      return res.status(400).json({
-        error: { message: `Missing 'artist name' in request body` }
-      })
-    }
-    if (!lyrics) {
-      return res.status(400).json({
-        error: { message: `Missing 'lyrics' in request body` }
-      })
-    }
+
     LyricService.insertLyrics(
       req.app.get('db'),
       newLyrics
