@@ -2,6 +2,7 @@ const express = require('express')
 const LyricService = require('./lyric-service')
 const lyricRouter = express.Router()
 const bodyParser = express.json()
+const xss = require('xss')
 
 const { v4: uuid } = require('uuid')
 
@@ -65,8 +66,8 @@ lyricRouter
     // };
 
     const newLyrics = { title, genre, mood, artist, lyrics }
-    for (const[key,value] of Object.entries(newLyrics)){
-      if(value == null){
+    for (const [key, value] of Object.entries(newLyrics)) {
+      if (value == null) {
         return res.status(400).json({
           error: { message: `Missing '${key}' in request body` }
         })
@@ -108,7 +109,14 @@ lyricRouter
             error: { message: `Lyrics doesn't exist` }
           })
         }
-        res.json(lyric)
+        res.json({
+          id: lyric.id,
+          title: xss(lyric.title),
+          genre: lyric.genre, // sanitize title
+          mood: lyric.mood, // sanitize content
+          artist: xss(lyric.artist),
+          lyrics: xss(lyric.lyrics) 
+        })
       })
       .catch(next)
   })

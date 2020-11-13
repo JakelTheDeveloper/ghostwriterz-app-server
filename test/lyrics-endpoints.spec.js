@@ -34,7 +34,34 @@ describe('Articles Endpoints', function () {
                     .expect(200, testData)
             })
         })
-        describe('GET /lyrics/:lyric_id', () => {
+        describe.only('GET /lyrics/:lyric_id', () => {
+            context(`Given an XSS attack article`, () => {
+                const maliciousArticle = {
+                    id: 911,
+                    title: "Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;",
+                    genre: "Rap",
+                    mood: "Happy",
+                    artist: "Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;",
+                    lyrics: `Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.`
+                }
+
+                beforeEach('insert malicious lyrics', () => {
+                    return db
+                        .into('lyric_data')
+                        .insert([maliciousArticle])
+                })
+
+                it('removes XSS attack content', () => {
+                    return supertest(app)
+                        .get(`/lyrics/${maliciousArticle.id}`)
+                        .expect(200)
+                        .expect(res => {
+                            expect(res.body.title).to.eql('Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;')
+                            expect(res.body.artist).to.eql('Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;')
+                            expect(res.body.lyrics).to.eql(`Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`)
+                        })
+                })
+            })
             context('Given there are lyrics in the database', () => {
                 const testData = makeLyricsArray()
 
@@ -100,13 +127,13 @@ describe('Articles Endpoints', function () {
                                 .expect(postRes.body)
                         )
                 })
-                const requiredFields = ['title','genre','mood', 'artist', 'lyrics']
+                const requiredFields = ['title', 'genre', 'mood', 'artist', 'lyrics']
 
                 requiredFields.forEach(field => {
                     const newLyrics = {
                         title: 'Test new article',
-                        genre:"Rap",
-                        mood:"Happy",
+                        genre: "Rap",
+                        mood: "Happy",
                         artist: 'Listicle',
                         lyrics: 'Test new article content...'
                     }
