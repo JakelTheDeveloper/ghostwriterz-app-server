@@ -31,6 +31,7 @@ const LyricsService = {
         return knex('lyric_data')
             .where({ id })
             .update(newLyricFields)
+            .returning('*')
     },
 }
 

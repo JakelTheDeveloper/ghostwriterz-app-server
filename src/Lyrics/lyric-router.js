@@ -112,8 +112,8 @@ LyricsRouter
       req.params.lyric_id,
       lyricsToUpdate
     )
-      .then(numRowsAffected => {
-        res.status(204).end()
+      .then(lyricsFromDb => {
+        res.status(200).json(lyricsFromDb[0])
       })
       .catch(next)
   })
