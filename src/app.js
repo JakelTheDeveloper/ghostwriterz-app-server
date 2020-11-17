@@ -8,12 +8,14 @@ const lyricRouter = require('./Lyrics/lyric-router')
 const logger = require('./logger')
 const app=express().use('*', cors());
 
-
+app.use(helmet())
+app.use(cors())
 
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')
 })
+
 
 app.use('/api/lyrics', lyricRouter)
 
@@ -48,8 +50,7 @@ const morganOption = (NODE_ENV === 'production')
   : 'common';
 
   app.use(morgan(morganOption))
-  app.use(helmet())
-app.use(cors())
+ 
 
 
 module.exports = app
