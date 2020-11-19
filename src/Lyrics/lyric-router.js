@@ -10,6 +10,16 @@ const { v4: uuid } = require('uuid')
 const logger = require('../logger')
 const lyricData = require('../store')
 
+const serializeLyrics = lyrics => ({
+  id: lyrics.id,
+  title: xss(lyrics.fullname),
+  genre: xss(lyrics.username),
+  mood: xss(lyrics.nickname),
+  artist: lyrics.artist,
+  lyrics: xss(lyrics.nickname),
+})
+
+
 
 
 LyricsRouter
@@ -22,13 +32,14 @@ LyricsRouter
       .catch(next)
   })
   .post(bodyParser, (req, res, next) => {
-    const { title, genre, mood, artist, lyrics } = req.body;
-    const newLyrics = { title, genre, mood, artist, lyrics }
+    const { title, lyrics, genre, mood, artist } = req.body;
+    const newLyrics = { title, lyrics, genre, mood, artist }
     for (const [key, value] of Object.entries(newLyrics)) {
       if (value == null) {
         return res.status(400).json({
           error: { message: `Missing '${key}' in request body` }
         })
+        newLyrics.artist = artist
       }
     }
 
@@ -40,7 +51,7 @@ LyricsRouter
         res
           .status(201)
           .location(path.posix.join(req.originalUrl + `/${lyrics.id}`))
-          .json(lyrics)
+          .json(serializeLyrics(lyrics))
       })
       .catch(next)
     // logger.info(`Lyrics with id ${lyrics.id} created`);
@@ -80,7 +91,7 @@ LyricsRouter
       title: xss(res.lyrics.title),
       genre: res.lyrics.genre, // sanitize title
       mood: res.lyrics.mood, // sanitize content
-      artist: xss(res.lyrics.artist),
+      artist: res.lyrics.artist,
       lyrics: xss(res.lyrics.lyrics)
     })
   })
@@ -113,7 +124,7 @@ LyricsRouter
       lyricsToUpdate
     )
       .then(lyricsFromDb => {
-        res.status(200).json(lyricsFromDb[0])
+        res.status(204).json(lyricsFromDb[0])//changed from 204 to 200
       })
       .catch(next)
   })
