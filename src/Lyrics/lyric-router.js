@@ -12,11 +12,11 @@ const lyricData = require('../store')
 
 const serializeLyrics = lyrics => ({
   id: lyrics.id,
-  title: xss(lyrics.fullname),
-  genre: xss(lyrics.username),
-  mood: xss(lyrics.nickname),
+  title: xss(lyrics.title),
+  genre: xss(lyrics.genre),
+  mood: xss(lyrics.mood),
   artist: lyrics.artist,
-  lyrics: xss(lyrics.nickname),
+  lyrics: xss(lyrics.lyrics),
 })
 
 
@@ -39,7 +39,6 @@ LyricsRouter
         return res.status(400).json({
           error: { message: `Missing '${key}' in request body` }
         })
-        newLyrics.artist = artist
       }
     }
 
@@ -124,7 +123,7 @@ LyricsRouter
       lyricsToUpdate
     )
       .then(lyricsFromDb => {
-        res.status(204).json(lyricsFromDb[0])//changed from 204 to 200
+        res.status(201).json(lyricsFromDb[0])
       })
       .catch(next)
   })
