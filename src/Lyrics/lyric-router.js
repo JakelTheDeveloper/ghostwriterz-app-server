@@ -86,6 +86,7 @@ LyricsRouter
   })
   .get((req, res, next) => {
     res.json({
+      key:res.lyrics.id,
       id: res.lyrics.id,
       title: xss(res.lyrics.title),
       genre: res.lyrics.genre, // sanitize title
@@ -116,10 +117,12 @@ LyricsRouter
         }
       })
     }
-
+    const {lyric_id} = req.params;
+    console.log(req.params,req.body)
     LyricsService.updateLyrics(
+      
       req.app.get('db'),
-      req.params.lyric_id,
+      lyric_id,artist,
       lyricsToUpdate
     )
       .then(lyricsFromDb => {

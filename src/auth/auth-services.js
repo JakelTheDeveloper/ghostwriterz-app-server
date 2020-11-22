@@ -2,19 +2,19 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../config');
 
 const AuthService = {
-    getUser(db, user_name) {
-        return db('acclimate_user')
+    getUser(db, username) {
+        return db('ghostwriterz_users')
             .select('*')
-            .where({user_name})
+            .where({username})
             .first()
     },
 
     createJWT(user) {
         return jwt.sign(
-            {user_id: user.user_id},
+            {id: user.id},
             JWT_SECRET,
             {
-                subject: user.user_name,
+                subject: user.username,
                 algorithm: 'HS256',
             }
         );

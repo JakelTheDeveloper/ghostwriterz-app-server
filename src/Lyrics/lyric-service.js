@@ -27,9 +27,10 @@ const LyricsService = {
             .where({ id })
             .delete()
     },
-    updateLyrics(knex, id, newLyricFields) {
+    updateLyrics(knex, id, artist, newLyricFields) {
+        console.log(id,artist)
         return knex('lyric_data')
-            .where({ id })
+            .where( {id,artist})
             .update(newLyricFields)
             .returning('*')
     },
