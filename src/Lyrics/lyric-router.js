@@ -56,15 +56,6 @@ LyricsRouter
     // logger.info(`Lyrics with id ${lyrics.id} created`);
   })
 
-//     lyricData.push(newLyrics);
-
-//     logger.info(`Lyrics with id ${id} created`);
-
-//     res
-//       .status(201)
-//       .location(`http://localhost:8000/lyrics/${id}`)
-//       .json({id});
-// })
 
 LyricsRouter
   .route('/:lyric_id')
@@ -86,7 +77,6 @@ LyricsRouter
   })
   .get((req, res, next) => {
     res.json({
-      key:res.lyrics.id,
       id: res.lyrics.id,
       title: xss(res.lyrics.title),
       genre: res.lyrics.genre, // sanitize title
