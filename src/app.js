@@ -5,6 +5,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
 const lyricRouter = require('./Lyrics/lyric-router')
+const AuthRoute = require('./auth/auth-router')
 const logger = require('./logger')
 const usersRouter = require('./users/users-router')
 const app=express().use('*', cors());
@@ -12,14 +13,14 @@ const app=express().use('*', cors());
 app.use(helmet())
 app.use(cors())
 
-
 app.get('/', (req, res) => {
   res.send('Hello, world!')
 })
 
+app.use('/api/auth', AuthRoute);
 app.use('/api/users', usersRouter)
-
 app.use('/api/lyrics', lyricRouter)
+
 
 //Set Up validate Token
 app.use(function validateBearerToken(req, res, next) {

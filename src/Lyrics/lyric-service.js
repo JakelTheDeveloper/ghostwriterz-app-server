@@ -28,7 +28,6 @@ const LyricsService = {
             .delete()
     },
     updateLyrics(knex, id, artist, newLyricFields) {
-        console.log(id,artist)
         return knex('lyric_data')
             .where( {id,artist})
             .update(newLyricFields)

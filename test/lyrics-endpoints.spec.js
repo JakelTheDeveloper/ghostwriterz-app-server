@@ -264,7 +264,7 @@ describe('Lyrics Endpoints', function () {
                         })
                 })
 
-                it('responds with 204 and updates the lyrics', () => {
+                it('responds with 201 and updates the lyrics', () => {
                     const idToUpdate = 2
                     const updateLyrics = {
                         title: "updated title",
@@ -280,7 +280,7 @@ describe('Lyrics Endpoints', function () {
                     return supertest(app)
                         .patch(`/api/lyrics/${idToUpdate}`)
                         .send(updateLyrics)
-                        .expect(204)
+                        .expect(201)
                         .then(res =>
                             supertest(app)
                                 .get(`/api/lyrics/${idToUpdate}`)
@@ -299,9 +299,11 @@ describe('Lyrics Endpoints', function () {
                             }
                         })
                 })
-                it(`responds with 204 when updating only a subset of fields`, () => {
+                it(`responds with 201 when updating only a subset of fields`, () => {
                     const idToUpdate = 2
                     const updateLyrics = {
+                        id:2,
+                        artist:1,
                         title: 'updated lyrics title',
                     }
                     const expectedLyrics = {
@@ -315,7 +317,7 @@ describe('Lyrics Endpoints', function () {
                             ...updateLyrics,
                             fieldToIgnore: 'should not be in GET response'
                         })
-                        .expect(204)
+                        .expect(201)//page needs to return to another page on succesful patch
                         .then(res =>
                             supertest(app)
                                 .get(`/api/lyrics/${idToUpdate}`)

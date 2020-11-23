@@ -2,7 +2,6 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 
 const AuthService = require('./auth-services');
-
 const AuthRoute = express.Router();
 
 AuthRoute
@@ -12,26 +11,28 @@ AuthRoute
         const loginInputs = { username, password };
 
         // Check for missing login inputs 
-        for ( const [ key, value ] of Object.entries(loginInputs) )
+        for (const [key, value] of Object.entries(loginInputs))
             if (value == null) // Or !value
-                return res.status(400).json({error: `Missing ${key} in body`})
+                return res.status(400).json({ error: `Missing ${key} in body` })
 
         // Compare login inputs against/with user credentials in database
         // Send JSON web token if login inputs pass validation tests
         // Otherwise, send 401 Unauthorized and appropriate error message
         return AuthService.getUser(req.app.get('db'), username)
             .then(user => {
-                if (!user)
-                    return res.status(401).json({error: 'Invalid username or password'})
+                if (!user) 
+                return res.status(401).json({ error: 'Invalid username' })  
+                
+                var salt = bcrypt.genSaltSync(10);
+                var hash = bcrypt.hashSync(user.password, salt);
 
-                return bcrypt.compare(loginInputs.password, user.password)
+                return AuthService.comparePasswords(loginInputs.password, hash)
                     .then(match => {
-                        if(!match)
-                            return res.status(401).json({error: 'Invalid username or password'})
-                        
+                        console.log(match)
+                        if (!match) 
+                        return res.status(401).json({ error: 'Invalid password' })
                         const token = AuthService.createJWT(user);
-
-                        res.status(200).json({authToken: token});
+                        res.status(200).json({ authToken: token });
                     })
                     .catch(next)
             })

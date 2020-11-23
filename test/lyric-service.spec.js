@@ -129,10 +129,10 @@ describe(`Lyrics service object`, function () {
                 title: 'updated title',
                 genre: 'Rap',
                 mood: 'Happy',
-                artist: 1,
+                artist: 2,
                 lyrics: 'updated lyrics'
             }
-            return LyricsService.updateLyrics(db, idOfLyricsToUpdate, newLyricsData)
+            return LyricsService.updateLyrics(db, idOfLyricsToUpdate,newLyricsData.artist, newLyricsData)
                 .then(() => LyricsService.getById(db, idOfLyricsToUpdate))
                 .then(lyrics => {
                     expect(lyrics).to.eql({

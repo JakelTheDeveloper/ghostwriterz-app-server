@@ -3,7 +3,7 @@ CREATE TABLE ghostwriterz_users(
     fullname TEXT NOT NULL,
     username TEXT NOT NULL UNIQUE,
     nickname TEXT,
-    password TEXT,
+    password varchar(60) NOT NULL,
     date_created TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

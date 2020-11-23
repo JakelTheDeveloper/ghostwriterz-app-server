@@ -1,4 +1,7 @@
 const jwt = require('jsonwebtoken');
+// const { JWT_SECRET } = require('../config');
+const bcrypt = require('bcryptjs')
+const config = require('../config');
 const { JWT_SECRET } = require('../config');
 
 const AuthService = {
@@ -8,7 +11,9 @@ const AuthService = {
             .where({username})
             .first()
     },
-
+    comparePasswords(password, hash) {
+        return bcrypt.compare(password, hash)
+      },
     createJWT(user) {
         return jwt.sign(
             {id: user.id},
@@ -17,7 +22,9 @@ const AuthService = {
                 subject: user.username,
                 algorithm: 'HS256',
             }
+            
         );
+        
     },
 
     verifyJWT(token) {
