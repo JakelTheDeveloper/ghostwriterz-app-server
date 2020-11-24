@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
-
 const AuthService = require('./auth-services');
+const config = require('../config')
 const AuthRoute = express.Router();
 
 AuthRoute
@@ -22,9 +22,9 @@ AuthRoute
             .then(user => {
                 if (!user) 
                 return res.status(401).json({ error: 'Invalid username' })  
-                
-                var salt = bcrypt.genSaltSync(10);
-                var hash = bcrypt.hashSync(user.password, salt);
+
+                let salt = bcrypt.genSaltSync(10);
+                let hash = bcrypt.hashSync(user.password, salt);
 
                 return AuthService.comparePasswords(loginInputs.password, hash)
                     .then(match => {
@@ -32,7 +32,9 @@ AuthRoute
                         if (!match) 
                         return res.status(401).json({ error: 'Invalid password' })
                         const token = AuthService.createJWT(user);
+                        // localStorage.setItem(config.TOKEN_KEY,token)
                         res.status(200).json({ authToken: token });
+                        console.log(req.res.id)
                     })
                     .catch(next)
             })

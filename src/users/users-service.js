@@ -2,6 +2,14 @@ const UsersService = {
     getAllUsers(knex) {
       return knex.select('*').from('ghostwriterz_users')
     },
+    
+    getUserByUsername(knex,username){
+        return knex
+        .from('ghostwriterz_users')
+        .select('*')
+        .where('username', username)
+        .first()
+    },
   
     insertUser(knex, newUser) {
       return knex
