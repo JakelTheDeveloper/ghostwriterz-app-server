@@ -8,6 +8,7 @@ const lyricRouter = require('./Lyrics/lyric-router')
 const AuthRoute = require('./auth/auth-router')
 const logger = require('./logger')
 const usersRouter = require('./users/users-router')
+// const myIndex = require('../../ghostwriterz-app/public')
 const app=express().use('*', cors());
 
 app.use(helmet())
@@ -16,6 +17,14 @@ app.use(cors())
 app.get('/', (req, res) => {
   res.send('Hello, world!')
 })
+
+// app.get('/*', function(req, res) {
+//   res.sendFile(path.join(__dirname, 'C:/Users/jakel/ghostwriterz-app/public/index.html'), function(err) {
+//     if (err) {
+//       res.status(500).send(err)
+//     }
+//   })
+// })
 
 app.use('/api/auth', AuthRoute);
 app.use('/api/users', usersRouter)

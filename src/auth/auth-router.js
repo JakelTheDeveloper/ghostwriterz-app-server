@@ -23,18 +23,18 @@ AuthRoute
                 if (!user) 
                 return res.status(401).json({ error: 'Invalid username' })  
 
-                let salt = bcrypt.genSaltSync(10);
-                let hash = bcrypt.hashSync(user.password, salt);
+                let salt = bcrypt.genSaltSync(12);
+                // let hash = bcrypt.hashSync(user.password, salt);
+
+                let hash = user.password
 
                 return AuthService.comparePasswords(loginInputs.password, hash)
                     .then(match => {
-                        console.log(match)
                         if (!match) 
                         return res.status(401).json({ error: 'Invalid password' })
                         const token = AuthService.createJWT(user);
                         // localStorage.setItem(config.TOKEN_KEY,token)
                         res.status(200).json({ authToken: token });
-                        console.log(req.res.id)
                     })
                     .catch(next)
             })

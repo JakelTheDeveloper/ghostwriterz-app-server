@@ -1,8 +1,10 @@
+const bcrypt = require('bcryptjs')
+
 const UsersService = {
     getAllUsers(knex) {
       return knex.select('*').from('ghostwriterz_users')
     },
-    
+
     getUserByUsername(knex,username){
         return knex
         .from('ghostwriterz_users')
@@ -10,16 +12,23 @@ const UsersService = {
         .where('username', username)
         .first()
     },
-  
+
+  hasUserWithUserName(db, username) {
+    return db('ghostwriterz_users')
+       .where({ username })
+       .first()
+       .then(user => !!user)
+   },
+   hashPassword(password){
+    return bcrypt.hash(password, 12)
+   },
     insertUser(knex, newUser) {
       return knex
         .insert(newUser)
         .into('ghostwriterz_users')
         .returning('*')
-        .then(rows => {
-          return rows[0]
-        })
-    },
+        .then(([user]) => user)
+        },
   
     getById(knex, id) {
       return knex

@@ -99,6 +99,13 @@ LyricsRouter
     const { title, genre, mood, artist, lyrics } = req.body
     const lyricsToUpdate = { title, genre, mood, artist, lyrics }
 
+    if(title === ''||lyrics === ''||title === null||lyrics === null){
+      return res.status(400).json({
+        error: {
+          message: `Request body must contain either 'title', 'genre', 'mood', 'artist' or 'lyrics'`
+        }
+      })
+    }
     const numberOfValues = Object.values(lyricsToUpdate).filter(Boolean).length
     if (numberOfValues === 0) {
       return res.status(400).json({
@@ -108,7 +115,6 @@ LyricsRouter
       })
     }
     const {lyric_id} = req.params;
-    console.log(req.params,req.body)
     LyricsService.updateLyrics(
       
       req.app.get('db'),
