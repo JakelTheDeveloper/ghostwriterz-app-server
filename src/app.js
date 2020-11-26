@@ -11,8 +11,19 @@ const usersRouter = require('./users/users-router')
 // const myIndex = require('../../ghostwriterz-app/public')
 const app=express().use('*', cors());
 
+const morganOption = (NODE_ENV === 'production')
+  ? 'tiny'
+  : 'common';
+app.use(morgan(morganOption))
+
 app.use(helmet())
 // app.use(cors())
+
+app.use(function(req,res,next){
+  res.header("Access-Control-Allow-Origin","*");
+  res.header("Access-Control-Allow-Headers","Origin,X-Requested-With,Content-Type, Accept")
+  next();
+})
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')
@@ -30,13 +41,12 @@ app.use('/api/auth', AuthRoute);
 app.use('/api/users', usersRouter)
 app.use('/api/lyrics', lyricRouter)
 
-app.use(function(req,res,next){
-  res.header("Access-Control-Allow-Origin","*");
-  res.header("Access-Control-Allow-Headers","Origin,X-Requested-With,Content-Type, Accept")
-  next();
-})
+
+
+
 
 //Set Up validate Token
+
 app.use(function validateBearerToken(req, res, next) {
   const apiToken = process.env.API_TOKEN
   const authToken = req.get('Authorization')
@@ -45,7 +55,7 @@ app.use(function validateBearerToken(req, res, next) {
     logger.error(`Unauthorized request to path: ${req.path}`);
     return res.status(401).json({ error: 'Unauthorized request' })
   }
-  // move to the next middleware
+ 
   next()
 })
 
@@ -62,11 +72,7 @@ app.use(function errorHandler(error, req, res, next) {
   res.status(500).json(response)
 })
 
-const morganOption = (NODE_ENV === 'production')
-  ? 'tiny'
-  : 'common';
 
-  app.use(morgan(morganOption))
  
 
 
