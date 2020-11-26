@@ -12,7 +12,7 @@ const usersRouter = require('./users/users-router')
 const app=express().use('*', cors());
 
 app.use(helmet())
-app.use(cors())
+// app.use(cors())
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')
@@ -30,6 +30,11 @@ app.use('/api/auth', AuthRoute);
 app.use('/api/users', usersRouter)
 app.use('/api/lyrics', lyricRouter)
 
+app.use(function(req,res,next){
+  res.header("Access-Control-Allow-Origin","*");
+  res.header("Access-Control-Allow-Headers","Origin,X-Requested-With,Content-Type, Accept")
+  next();
+})
 
 //Set Up validate Token
 app.use(function validateBearerToken(req, res, next) {
