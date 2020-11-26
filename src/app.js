@@ -19,11 +19,11 @@ app.use(morgan(morganOption))
 app.use(helmet())
 // app.use(cors())
 
-app.use(function(req,res,next){
-  res.header("Access-Control-Allow-Origin","*");
-  res.header("Access-Control-Allow-Headers","Origin,X-Requested-With,Content-Type, Accept")
-  next();
-})
+// app.use(function(req,res,next){
+//   res.header("Access-Control-Allow-Origin","*");
+//   res.header("Access-Control-Allow-Headers","Origin,X-Requested-With,Content-Type, Accept")
+//   next();
+// })
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')
@@ -47,17 +47,17 @@ app.use('/api/lyrics', lyricRouter)
 
 //Set Up validate Token
 
-app.use(function validateBearerToken(req, res, next) {
-  const apiToken = process.env.API_TOKEN
-  const authToken = req.get('Authorization')
+// app.use(function validateBearerToken(req, res, next) {
+//   const apiToken = process.env.API_TOKEN
+//   const authToken = req.get('Authorization')
 
-  if (!authToken || authToken.split(' ')[1] !== apiToken) {
-    logger.error(`Unauthorized request to path: ${req.path}`);
-    return res.status(401).json({ error: 'Unauthorized request' })
-  }
+//   if (!authToken || authToken.split(' ')[1] !== apiToken) {
+//     logger.error(`Unauthorized request to path: ${req.path}`);
+//     return res.status(401).json({ error: 'Unauthorized request' })
+//   }
  
-  next()
-})
+//   next()
+// })
 
 
 
