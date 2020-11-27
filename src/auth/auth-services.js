@@ -22,7 +22,7 @@ const AuthService = {
 
     createJWT(user) {
         return jwt.sign(
-            {id: user.id},
+            {user},
             JWT_SECRET,
             {
                 subject: user.username,
@@ -38,6 +38,12 @@ const AuthService = {
             algorithm: 'HS256'
         });
     },
+    parseBasicToken(token){
+        return Buffer
+        .from(token,'base64')
+        .toString()
+        .split(':')
+    }
 };
 
 module.exports = AuthService;
