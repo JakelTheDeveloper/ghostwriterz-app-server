@@ -8,7 +8,6 @@ const lyricRouter = require('./Lyrics/lyric-router')
 const AuthRoute = require('./auth/auth-router')
 const logger = require('./logger')
 const usersRouter = require('./users/users-router')
-// const myIndex = require('../../ghostwriterz-app/public')
 const app=express().use('*', cors());
 
 const morganOption = (NODE_ENV === 'production')
@@ -17,13 +16,7 @@ const morganOption = (NODE_ENV === 'production')
 app.use(morgan(morganOption))
 
 app.use(helmet())
-// app.use(cors())
 
-// app.use(function(req,res,next){
-//   res.header("Access-Control-Allow-Origin","*");
-//   res.header("Access-Control-Allow-Headers","Origin,X-Requested-With,Content-Type, Accept")
-//   next();
-// })
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')
@@ -33,9 +26,6 @@ app.get('/', (req, res) => {
 app.use('/api/auth', AuthRoute);
 app.use('/api/users', usersRouter)
 app.use('/api/lyrics', lyricRouter)
-
-
-
 
 
 //Set Up validate Token
@@ -65,93 +55,4 @@ app.use(function errorHandler(error, req, res, next) {
   res.status(500).json(response)
 })
 
-
- 
-
-
 module.exports = app
-
-
-
-
-
-
-
-
-
-
-
-
-
-// LyricService.getAllLyrics(knexInstance)
-//   .then(lyrics => console.log(lyrics))
-//   .then(() =>
-//     LyricService.insertLyrics(knexInstance, {
-//       title: "Hello",
-//       genre: "Rap",
-//       mood: "Happy",
-//       artist: "Foo",
-//       lyrics: "Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis"
-//     })
-//   )
-//   .then(newLyric => {
-//     console.log(newLyric)
-//     return LyricService.updateLyrics(
-//       knexInstance,
-//       newLyric.id,
-//       {
-//         title: "Updated Title",
-//       }
-//     ).then(() => LyricService.getById(knexInstance, newLyric.id))
-//   })
-//   .then(lyric => {
-//     console.log(lyric)
-//     return LyricService.deleteLyrics(knexInstance, lyric.id)
-//   })
-
-
-// console.log(LyricService.getAllLyrics())
-
-// knexInstance.from('lyric_data').select('*')
-// .then(result =>{
-//    console.log(result)
-// })
-// knexInstance.from('lyric_data')
-
-// const qry = knexInstance
-// .select('title','lyrics')
-// .from('lyric_data')
-// .where({artist:'Jupiter'})
-// .first()
-// .toQuery()
-// .then(r=>{
-//   console.log(r)
-// })
-// console.log(qry)
-
-// function searchByTitle(searchTerm) {
-//   knexInstance
-//   .select('title', 'genre', 'mood', 'artist','lyrics')
-//      .from('lyric_data')
-//     .where('title', 'ILIKE', `%${searchTerm}%`)
-//     .then(result => {
-//       console.log(result)
-//      })
-// }
-
-// function paginateLyrics(page) {
-//   const lyricsPerPage = 2
-//   const offset = lyricsPerPage * (page - 1)
-//   knexInstance
-//   .select('title', 'genre', 'mood', 'artist','lyrics')
-//   .from('lyric_data')
-//     .limit(lyricsPerPage)
-//     .offset(offset)
-//     .then(result => {
-//       console.log(result)
-//     })
-// }
-// paginateLyrics(1)
-// searchByTitle('ow')
-
-// use all the LyricService methods!!
