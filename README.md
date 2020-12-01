@@ -1,26 +1,130 @@
-# Express Boilerplate!
+# Ghostwriterz Server
 
-This is a boilerplate project used for starting new projects!
 
-## Set up
+## API Documentation
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+### Description
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+This api allows you to use CRUD operations for sharing your song lyrics around the world for others to use. Within this documentation, you'll find out how to start creating and posting your own personal song lyrics to the Ghostwriterz database.
 
-## Scripts
+#### Version
 
-Start the application `npm start`
+-1.0.0
 
-Start nodemon for the application `npm run dev`
+## Servers
 
-Run the tests `npm test`
+### Lyrics Server
 
-## Deploying
+#### URL: 
 
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+morning-tundra-70520.herokuapp.com/api/lyrics
+
+#### DESCRIPTION:
+
+ ``` method: GET ```
+
+#### URL: 
+
+morning-tundra-70520.herokuapp.com/api/lyrics
+
+#### DESCRIPTION: 
+
+```                
+                    method: 'POST',
+                    body: JSON.stringify({
+                        title: title,
+                        genre: genre,
+                        mood: mood,
+                        artist: artist,
+                        lyrics: lyrics
+                    }),
+                    headers: { 'Content-Type': 'application/json' }
+
+                    expect(201)
+```      
+
+#### URL:
+
+morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
+
+#### DESCRIPTION: 
+
+```
+            method: 'PATCH',
+            body: JSON.stringify({
+                id: id,
+                title: title,
+                genre: genre,
+                mood: mood,
+                artist: artist,
+                lyrics: lyrics
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+
+            expect(201)
+```
+
+#### URL: 
+
+morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
+
+#### DESCRIPTION: 
+
+```
+            method: 'DELETE',
+          headers: {
+            'content-type': 'application/json'
+          },
+        })
+
+            expect(204)
+```
+
+### Users Server
+
+#### URL: 
+
+morning-tundra-70520.herokuapp.com/api/users
+
+#### DESCRIPTION: REGISTER
+
+```
+           method: 'POST',
+            body: JSON.stringify({
+            fullname:fullname,
+            username:email,
+            nickname:username,
+            password:password,
+            passwordConfirm:password_confirm
+            }),
+            headers: {
+              'content-type': 'application/json',
+            }
+         })
+
+            expect(201)
+```
+
+#### URL: 
+
+morning-tundra-70520.herokuapp.com/api/auth/signin
+
+#### DESCRIPTION: LOGIN
+
+```
+           method:'POST',
+            body: JSON.stringify({
+            username:username,
+            password:password
+            }),
+            headers:{
+              'Accept':'application/json',
+              'Content-Type':'application/json'
+            }
+          })
+
+            expect(204)
+```
+               
