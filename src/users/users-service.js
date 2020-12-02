@@ -12,10 +12,10 @@ const UsersService = {
         .where('username', username)
         .first()
     },
-
-  hasUserWithUserName(db, username) {
+    
+  hasUserWithUserName(db, nickname) {
     return db('ghostwriterz_users')
-       .where({ username })
+       .where({ nickname })
        .first()
        .then(user => !!user)
    },
