@@ -97,6 +97,7 @@ LyricsRouter
   })
   .patch(bodyParser, (req, res, next) => {
     const { title, genre, mood, artist, lyrics } = req.body
+    console.log(title,genre,mood,artist,lyrics)
     const lyricsToUpdate = { title, genre, mood, artist, lyrics }
 
     if(title === ''||lyrics === ''||title === null||lyrics === null){
@@ -106,17 +107,16 @@ LyricsRouter
         }
       })
     }
-    const numberOfValues = Object.values(lyricsToUpdate).filter(Boolean).length
-    if (numberOfValues === 0) {
-      return res.status(400).json({
-        error: {
-          message: `Request body must contain either 'title', 'genre', 'mood', 'artist' or 'lyrics'`
-        }
-      })
-    }
+    // const numberOfValues = Object.values(lyricsToUpdate).filter(Boolean).length
+    // if (numberOfValues === 0) {
+    //   return res.status(400).json({
+    //     error: {
+    //       message: `Request body must contain either 'title', 'genre', 'mood', 'artist' or 'lyrics'`
+    //     }
+    //   })
+    // }
     const {lyric_id} = req.params;
     LyricsService.updateLyrics(
-      
       req.app.get('db'),
       lyric_id,artist,
       lyricsToUpdate
@@ -126,25 +126,5 @@ LyricsRouter
       })
       .catch(next)
   })
-
-// .delete((req, res) => {
-//   const { id } = req.params;
-
-//   const lyricIndex = lyricData.findIndex(li => li.id == id);
-
-//   if (lyricIndex === -1) {
-//     logger.error(`Lyrics with id ${id} not found.`);
-//     return res
-//       .status(404)
-//       .send('Not Found');
-//   }
-
-//   lyricData.splice(lyricIndex, 1);
-
-//   logger.info(`Lyrics with id ${id} deleted.`);
-//   res
-//     .status(204)
-//     .end();
-// })
 
 module.exports = LyricsRouter
