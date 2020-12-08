@@ -13,8 +13,8 @@ const lyricData = require('../store')
 const serializeLyrics = lyrics => ({
   id: lyrics.id,
   title: xss(lyrics.title),
-  genre: xss(lyrics.genre),
-  mood: xss(lyrics.mood),
+  genre: lyrics.genre,
+  mood: lyrics.mood,
   artist: lyrics.artist,
   lyrics: xss(lyrics.lyrics),
 })
@@ -107,14 +107,14 @@ LyricsRouter
         }
       })
     }
-    // const numberOfValues = Object.values(lyricsToUpdate).filter(Boolean).length
-    // if (numberOfValues === 0) {
-    //   return res.status(400).json({
-    //     error: {
-    //       message: `Request body must contain either 'title', 'genre', 'mood', 'artist' or 'lyrics'`
-    //     }
-    //   })
-    // }
+    const numberOfValues = Object.values(lyricsToUpdate).filter(Boolean).length
+    if (numberOfValues === 0) {
+      return res.status(400).json({
+        error: {
+          message: `Request body must contain either 'title', 'genre', 'mood', 'artist' or 'lyrics'`
+        }
+      })
+    }
     const {lyric_id} = req.params;
     LyricsService.updateLyrics(
       req.app.get('db'),
