@@ -5,12 +5,10 @@ const LyricsService = {
         return knex.select('*').from('lyric_data')
     },
     insertLyrics(knex, newLyric) {
-        // return Promise.resolve({})
         return knex
             .insert(newLyric)
             .into('lyric_data')
             .returning('*')
-            //if you dont .then(rows) you'll get {object (id,title,genre,...)}
             .then(rows => {
                 return rows[0]
             })
@@ -27,9 +25,9 @@ const LyricsService = {
             .where({ id })
             .delete()
     },
-    updateLyrics(knex, id,artist, newLyricFields) {
+    updateLyrics(knex, id, artist, newLyricFields) {
         return knex('lyric_data')
-            .where( {id,artist})
+            .where({ id, artist })
             .update(newLyricFields)
             .returning('*')
     },
