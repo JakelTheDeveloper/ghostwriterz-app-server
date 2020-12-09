@@ -53,7 +53,6 @@ LyricsRouter
           .json(serializeLyrics(lyrics))
       })
       .catch(next)
-    // logger.info(`Lyrics with id ${lyrics.id} created`);
   })
 
 
@@ -70,7 +69,7 @@ LyricsRouter
             error: { message: `Lyrics doesn't exist` }
           })
         }
-        res.lyrics = lyrics // save lyric as lyric for later use
+        res.lyrics = lyrics
         next()
       })
       .catch(next)
@@ -79,8 +78,8 @@ LyricsRouter
     res.json({
       id: res.lyrics.id,
       title: xss(res.lyrics.title),
-      genre: res.lyrics.genre, // sanitize title
-      mood: res.lyrics.mood, // sanitize content
+      genre: res.lyrics.genre,
+      mood: res.lyrics.mood,
       artist: res.lyrics.artist,
       lyrics: xss(res.lyrics.lyrics)
     })
@@ -97,7 +96,6 @@ LyricsRouter
   })
   .patch(bodyParser, (req, res, next) => {
     const { title, genre, mood, artist, lyrics } = req.body
-    console.log(title,genre,mood,artist,lyrics)
     const lyricsToUpdate = { title, genre, mood, artist, lyrics }
 
     if(title === ''||lyrics === ''||title === null||lyrics === null){
@@ -107,14 +105,7 @@ LyricsRouter
         }
       })
     }
-    const numberOfValues = Object.values(lyricsToUpdate).filter(Boolean).length
-    if (numberOfValues === 0) {
-      return res.status(400).json({
-        error: {
-          message: `Request body must contain either 'title', 'genre', 'mood', 'artist' or 'lyrics'`
-        }
-      })
-    }
+  
     const {lyric_id} = req.params;
     LyricsService.updateLyrics(
       req.app.get('db'),
@@ -122,6 +113,7 @@ LyricsRouter
       lyricsToUpdate
     )
       .then(lyricsFromDb => {
+        console.log(lyricsFromDb)
         res.status(201).json(lyricsFromDb[0])
       })
       .catch(next)
