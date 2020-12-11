@@ -19,7 +19,7 @@ This api allows you to use CRUD operations for sharing your song lyrics around t
 #### URL: 
 
 ```
-          morning-tundra-70520.herokuapp.com/api/lyrics
+                    morning-tundra-70520.herokuapp.com/api/lyrics
 ```
 
 #### DESCRIPTION:
@@ -27,15 +27,13 @@ This api allows you to use CRUD operations for sharing your song lyrics around t
  
 
 ``` 
-
-              method: GET 
-
+                    method: GET 
 ```
 
 #### URL: 
 
 ```
-          morning-tundra-70520.herokuapp.com/api/lyrics
+                    morning-tundra-70520.herokuapp.com/api/lyrics
 ```
 
 #### DESCRIPTION: 
@@ -54,94 +52,86 @@ This api allows you to use CRUD operations for sharing your song lyrics around t
                     expect(201)
 ```      
 ```
+                     //Genre must be one of Types
 
-    //Genre must be one of Types
-
-    'Hip Hop',
-    'Pop',
-    'Rock',
-    'Jazz',
-    'Folk',
-    'Musical',
-    'Country',
-    'Classical',
-    'Heavy Metal',
-    'Rhythm and Blues',
-    'Electronic Dance',
-    'Punk',
-    'Soul',
-    'Electronic Music',
-    'Rap',
-    'Reggae',
-    'Funk',
-    'Disco',
-    'House',
-    'Techno',
-    'Gospel'
-
+                      'Hip Hop',
+                      'Pop',
+                      'Rock',
+                      'Jazz',
+                      'Folk',
+                      'Musical',
+                      'Country',
+                      'Classical',
+                      'Heavy Metal',
+                      'Rhythm and Blues',
+                      'Electronic Dance',
+                      'Punk',
+                      'Soul',
+                      'Electronic Music',
+                      'Rap',
+                      'Reggae',
+                      'Funk',
+                      'Disco',
+                      'House',
+                      'Techno',
+                      'Gospel'
 ``` 
 
 ```
+                      //Moods must be one of Types
 
-//Moods must be one of Types
-
-    'Happy',
-    'Energetic',
-    'Sad',
-    'Calm',
-    'Depression',
-    'Anger',
-    'Carefree',
-    'Gloomy',
-    'Annoyed'
-
+                      'Happy',
+                      'Energetic',
+                      'Sad',
+                      'Calm',
+                      'Depression',
+                      'Anger',
+                      'Carefree',
+                      'Gloomy',
+                      'Annoyed'
 ``` 
 
 #### URL:
 
 ```
-            morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
+                      morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
 ```
 
 #### DESCRIPTION: 
 
 ```
+                      method: 'PATCH',
+                      body: JSON.stringify({
+                          id: id,
+                          title: title,
+                          genre: genre,
+                          mood: mood,
+                          artist: artist,
+                          lyrics: lyrics
+                      }),
+                      headers: {
+                          "Content-Type": "application/json; charset=UTF-8"
+                      }
 
-            method: 'PATCH',
-            body: JSON.stringify({
-                id: id,
-                title: title,
-                genre: genre,
-                mood: mood,
-                artist: artist,
-                lyrics: lyrics
-            }),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-
-            expect(201)
-
+                      expect(201)
 ``` 
 
 #### URL: 
 
 ```
-            morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
+                      morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
 ```
 
 #### DESCRIPTION: 
 
 ```
+                      method: 'DELETE',
+                        headers: {
+                          'Content-Type': 'application/json'
+                      },
+                    })
 
-            method: 'DELETE',
-          headers: {
-            'content-type': 'application/json'
-          },
-        })
-
-            expect(204)
-
+                      expect(204)
 ``` 
 
 ### Users Server
@@ -149,53 +139,49 @@ This api allows you to use CRUD operations for sharing your song lyrics around t
 #### URL: 
 
 ```
-            morning-tundra-70520.herokuapp.com/api/users
+                      morning-tundra-70520.herokuapp.com/api/users
 ```
 
 #### DESCRIPTION: REGISTER
 
 ```
+                      method: 'POST',
+                      body: JSON.stringify({
+                          fullname:fullname,
+                          username:email,
+                          nickname:username,
+                          password:password,
+                          passwordConfirm:password_confirm
+                      }),
+                      headers: {
+                          'Content-Type': 'application/json',
+                        }
+                      })
 
-           method: 'POST',
-            body: JSON.stringify({
-            fullname:fullname,
-            username:email,
-            nickname:username,
-            password:password,
-            passwordConfirm:password_confirm
-            }),
-            headers: {
-              'content-type': 'application/json',
-            }
-         })
-
-            expect(201)
-
+                      expect(201)
 ``` 
 
 #### URL: 
 
 ```
-           morning-tundra-70520.herokuapp.com/api/auth/signin
+                      morning-tundra-70520.herokuapp.com/api/auth/signin
 ```
 
 #### DESCRIPTION: LOGIN
 
 ```
+                      method:'POST',
+                      body: JSON.stringify({
+                      username:username,
+                      password:password
+                      }),
+                      headers:{
+                        'Accept':'application/json',
+                        'Content-Type':'application/json'
+                        }
+                      })
 
-           method:'POST',
-            body: JSON.stringify({
-            username:username,
-            password:password
-            }),
-            headers:{
-              'Accept':'application/json',
-              'Content-Type':'application/json'
-            }
-          })
-
-            expect(204)
-
+                      expect(204)
 ```
 
                
