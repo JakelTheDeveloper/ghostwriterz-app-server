@@ -8,11 +8,11 @@ const lyricRouter = require('./Lyrics/lyric-router')
 const AuthRoute = require('./auth/auth-router')
 const logger = require('./logger')
 const usersRouter = require('./users/users-router')
-const app=express().use('*', cors());
+const app=express().use('*', cors())
 
 const morganOption = (NODE_ENV === 'production')
   ? 'tiny'
-  : 'common';
+  : 'common'
 app.use(morgan(morganOption))
 
 app.use(helmet())
@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 })
 
 
-app.use('/api/auth', AuthRoute);
+app.use('/api/auth', AuthRoute)
 app.use('/api/users', usersRouter)
 app.use('/api/lyrics', lyricRouter)
 
@@ -35,7 +35,7 @@ app.use('/api/lyrics', lyricRouter)
 //   const authToken = req.get('Authorization')
 
 //   if (!authToken || authToken.split(' ')[1] !== apiToken) {
-//     logger.error(`Unauthorized request to path: ${req.path}`);
+//     logger.error(`Unauthorized request to path: ${req.path}`)
 //     return res.status(401).json({ error: 'Unauthorized request' })
 //   }
  

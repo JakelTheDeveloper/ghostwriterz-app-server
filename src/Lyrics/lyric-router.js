@@ -32,7 +32,7 @@ LyricsRouter
       .catch(next)
   })
   .post(bodyParser, (req, res, next) => {
-    const { title, lyrics, genre, mood, artist } = req.body;
+    const { title, lyrics, genre, mood, artist } = req.body
     const newLyrics = { title, lyrics, genre, mood, artist }
     for (const [key, value] of Object.entries(newLyrics)) {
       if (value == null) {
@@ -98,7 +98,7 @@ LyricsRouter
     const { title, genre, mood, artist, lyrics } = req.body
     const lyricsToUpdate = { title, genre, mood, artist, lyrics }
 
-    if(title === ''||lyrics === ''||title === null||lyrics === null){
+    if (title === '' || lyrics === '' || title === null || lyrics === null) {
       return res.status(400).json({
         error: {
           message: `Request body must contain either 'title', 'genre', 'mood', 'artist' or 'lyrics'`
@@ -113,10 +113,10 @@ LyricsRouter
         }
       })
     }
-    const {lyric_id} = req.params;
+    const { lyric_id } = req.params
     LyricsService.updateLyrics(
       req.app.get('db'),
-      lyric_id,artist,
+      lyric_id, artist,
       lyricsToUpdate
     )
       .then(lyricsFromDb => {

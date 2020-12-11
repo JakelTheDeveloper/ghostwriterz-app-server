@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
-const config = require('../config');
-const { JWT_SECRET } = require('../config');
+const config = require('../config')
+const { JWT_SECRET } = require('../config')
 
 const AuthService = {
     getUser(db, username) {
@@ -16,7 +16,7 @@ const AuthService = {
 
     decodeJWT(data) {
         let decoded = data.substr(37, 63)
-        return jwt.decode(decoded);
+        return jwt.decode(decoded)
     },
 
     createJWT(user) {
@@ -28,14 +28,14 @@ const AuthService = {
                 algorithm: 'HS256',
             }
 
-        );
+        )
 
     },
 
     verifyJWT(token) {
         return jwt.verify(token, JWT_SECRET, {
             algorithm: 'HS256'
-        });
+        })
     },
     parseBasicToken(token) {
         return Buffer
@@ -43,6 +43,6 @@ const AuthService = {
             .toString()
             .split(':')
     }
-};
+}
 
-module.exports = AuthService;
+module.exports = AuthService

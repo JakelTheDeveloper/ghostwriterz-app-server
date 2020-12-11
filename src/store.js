@@ -25,4 +25,4 @@ let lyricData = [
     },
 ]
 
-  module.exports = lyricData
+module.exports = lyricData

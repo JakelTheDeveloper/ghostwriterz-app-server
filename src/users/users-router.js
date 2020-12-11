@@ -29,7 +29,7 @@ usersRouter
     const { fullname, username, nickname, password, passwordConfirm } = req.body
     const newUser = { fullname, username, nickname, password }
     const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/
-    let hashedPassword;
+    let hashedPassword
 
     if (fullname === '' || fullname === null) {
       return res.status(400).json({ error: { message: `Missing 'Full Name' in request body` } })
@@ -65,10 +65,10 @@ usersRouter
 
         return UsersService.hashPassword(password)
           .then(hashedPassword => {
-            newUser.fullname = fullname;
-            newUser.username = username;
-            newUser.nickname = nickname;
-            newUser.password = hashedPassword;
+            newUser.fullname = fullname
+            newUser.username = username
+            newUser.nickname = nickname
+            newUser.password = hashedPassword
 
             return UsersService.insertUser(
               req.app.get('db'),
