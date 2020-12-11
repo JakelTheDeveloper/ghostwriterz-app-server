@@ -8,6 +8,8 @@ This api allows you to use CRUD operations for sharing your song lyrics around t
 
 #### *[LIVE APP](https://ghostwriterz-app.vercel.app/)*
 
+#### *[FRONTEND REPO](https://github.com/JakelTheDeveloper/ghostwriterz-app-client)*
+
 #### Version
 
 -1.0.0
