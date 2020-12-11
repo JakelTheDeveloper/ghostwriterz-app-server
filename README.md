@@ -1,11 +1,12 @@
 # Ghostwriterz Server
 
-
 ## API Documentation
 
 ### Description
 
 This api allows you to use CRUD operations for sharing your song lyrics around the world for others to use. Within this documentation, you'll find out how to start creating and posting your own personal song lyrics to the Ghostwriterz database.
+
+#### *[LIVE APP](https://ghostwriterz-app.vercel.app/)*
 
 #### Version
 
@@ -21,7 +22,9 @@ morning-tundra-70520.herokuapp.com/api/lyrics
 
 #### DESCRIPTION:
 
- ``` method: GET ```
+ ``` method: GET 
+
+``` 
 
 #### URL: 
 
@@ -42,7 +45,8 @@ morning-tundra-70520.herokuapp.com/api/lyrics
 
                     expect(201)
 ```      
-``` 
+```
+
     //Genre must be one of Types
 
     'Hip Hop',
@@ -66,9 +70,11 @@ morning-tundra-70520.herokuapp.com/api/lyrics
     'House',
     'Techno',
     'Gospel'
-```
+
+``` 
 
 ```
+
 //Moods must be one of Types
 
     'Happy',
@@ -81,7 +87,7 @@ morning-tundra-70520.herokuapp.com/api/lyrics
     'Gloomy',
     'Annoyed'
 
-```
+``` 
 
 #### URL:
 
@@ -90,6 +96,7 @@ morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
 #### DESCRIPTION: 
 
 ```
+
             method: 'PATCH',
             body: JSON.stringify({
                 id: id,
@@ -104,7 +111,8 @@ morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
             }
 
             expect(201)
-```
+
+``` 
 
 #### URL: 
 
@@ -113,6 +121,7 @@ morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
 #### DESCRIPTION: 
 
 ```
+
             method: 'DELETE',
           headers: {
             'content-type': 'application/json'
@@ -120,7 +129,8 @@ morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
         })
 
             expect(204)
-```
+
+``` 
 
 ### Users Server
 
@@ -131,6 +141,7 @@ morning-tundra-70520.herokuapp.com/api/users
 #### DESCRIPTION: REGISTER
 
 ```
+
            method: 'POST',
             body: JSON.stringify({
             fullname:fullname,
@@ -145,7 +156,8 @@ morning-tundra-70520.herokuapp.com/api/users
          })
 
             expect(201)
-```
+
+``` 
 
 #### URL: 
 
@@ -154,6 +166,7 @@ morning-tundra-70520.herokuapp.com/api/auth/signin
 #### DESCRIPTION: LOGIN
 
 ```
+
            method:'POST',
             body: JSON.stringify({
             username:username,
@@ -167,4 +180,5 @@ morning-tundra-70520.herokuapp.com/api/auth/signin
 
             expect(204)
 ```
+
                
