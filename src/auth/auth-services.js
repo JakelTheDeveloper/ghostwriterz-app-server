@@ -27,9 +27,7 @@ const AuthService = {
                 subject: user.username,
                 algorithm: 'HS256',
             }
-
         )
-
     },
 
     verifyJWT(token) {

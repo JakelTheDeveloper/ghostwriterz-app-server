@@ -19,9 +19,6 @@ const serializeLyrics = lyrics => ({
   lyrics: xss(lyrics.lyrics),
 })
 
-
-
-
 LyricsRouter
   .route('/')
   .get((req, res, next) => {
@@ -54,7 +51,6 @@ LyricsRouter
       })
       .catch(next)
   })
-
 
 LyricsRouter
   .route('/:lyric_id')
@@ -105,7 +101,9 @@ LyricsRouter
         }
       })
     }
+
     const numberOfValues = Object.values(lyricsToUpdate).filter(Boolean).length
+
     if (numberOfValues === 0) {
       return res.status(400).json({
         error: {
@@ -113,6 +111,7 @@ LyricsRouter
         }
       })
     }
+    
     const { lyric_id } = req.params
     LyricsService.updateLyrics(
       req.app.get('db'),

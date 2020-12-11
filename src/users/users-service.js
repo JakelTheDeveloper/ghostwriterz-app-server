@@ -4,7 +4,6 @@ const UsersService = {
   getAllUsers(knex) {
     return knex.select('*').from('ghostwriterz_users')
   },
-
   getUserByUsername(knex, username) {
     return knex
       .from('ghostwriterz_users')
@@ -12,7 +11,6 @@ const UsersService = {
       .where('username', username)
       .first()
   },
-
   hasUserWithUserName(db, nickname) {
     return db('ghostwriterz_users')
       .where({ nickname })
@@ -29,7 +27,6 @@ const UsersService = {
       .returning('*')
       .then(([user]) => user)
   },
-
   getById(knex, id) {
     return knex
       .from('ghostwriterz_users')
@@ -37,13 +34,11 @@ const UsersService = {
       .where('id', id)
       .first()
   },
-
   deleteUser(knex, id) {
     return knex('ghostwriterz_users')
       .where({ id })
       .delete()
   },
-
   updateUser(knex, id, newUserFields) {
     return knex('ghostwriterz_users')
       .where({ id })
