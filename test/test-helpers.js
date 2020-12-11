@@ -95,15 +95,6 @@ function seedAllTables(
         await seedUsersTable(trx, users)
         await trx('ghostwriterz_users').insert(users)
         await trx('lyric_data').insert(lyrics)
-        // await db.raw(
-        // 	`SELECT setval('acclimate_user_task_user_task_id_seq', ?)`,
-        // 	userTasks[userTasks.length - 1].user_task_id
-        // )
-        // await trx('acclimate_user_shopping_item').insert(userShoppingItems)
-        // await db.raw(
-        // 	`SELECT setval('acclimate_user_shopping_item_user_shopping_item_id_seq', ?)`,
-        // 	userShoppingItems[userShoppingItems.length - 1].user_shopping_item_id
-        // )
     })
 }
 
@@ -120,5 +111,4 @@ module.exports = {
     seedUsersTable,
     seedAllTables,
     truncateAllTables
-    // makeJWTAuthHeader
 }
