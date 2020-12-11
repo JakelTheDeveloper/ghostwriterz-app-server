@@ -18,7 +18,11 @@ This api allows you to use CRUD operations for sharing your song lyrics around t
 
 #### URL: 
 
+```
+
 morning-tundra-70520.herokuapp.com/api/lyrics
+
+```
 
 #### DESCRIPTION:
 
@@ -32,7 +36,10 @@ morning-tundra-70520.herokuapp.com/api/lyrics
 
 #### URL: 
 
+```
 morning-tundra-70520.herokuapp.com/api/lyrics
+
+```
 
 #### DESCRIPTION: 
 
@@ -95,7 +102,11 @@ morning-tundra-70520.herokuapp.com/api/lyrics
 
 #### URL:
 
+```
+
 morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
+
+```
 
 #### DESCRIPTION: 
 
@@ -120,7 +131,11 @@ morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
 
 #### URL: 
 
+```
+
 morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
+
+```
 
 #### DESCRIPTION: 
 
@@ -140,7 +155,10 @@ morning-tundra-70520.herokuapp.com/api/lyrics/lyric_id
 
 #### URL: 
 
+```
 morning-tundra-70520.herokuapp.com/api/users
+
+```
 
 #### DESCRIPTION: REGISTER
 
@@ -165,7 +183,11 @@ morning-tundra-70520.herokuapp.com/api/users
 
 #### URL: 
 
+```
+
 morning-tundra-70520.herokuapp.com/api/auth/signin
+
+```
 
 #### DESCRIPTION: LOGIN
 
