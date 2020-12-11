@@ -22,9 +22,13 @@ morning-tundra-70520.herokuapp.com/api/lyrics
 
 #### DESCRIPTION:
 
- ``` method: GET 
+ 
 
 ``` 
+
+              method: GET 
+
+```
 
 #### URL: 
 
@@ -32,7 +36,7 @@ morning-tundra-70520.herokuapp.com/api/lyrics
 
 #### DESCRIPTION: 
 
-```                
+``` 
                     method: 'POST',
                     body: JSON.stringify({
                         title: title,
@@ -179,6 +183,7 @@ morning-tundra-70520.herokuapp.com/api/auth/signin
           })
 
             expect(204)
+
 ```
 
                
