@@ -45,28 +45,25 @@ function makeLyricsArray() {
 function makeUsersArray() {
     return [
         {
-            id: 1,
-            fullname: 'Sam Gamgee',
-            username: 'sam.gamgee@shire.com',
-            nickname: 'Sam',
+            fullname: 'Foo',
+            username: 'foo@gmail.com',
+            nickname: 'DemoFoo',
             password: 'secret',
             date_created: '2029-01-22T16:28:32.615Z'
-        },
-        {
-            id: 2,
-            fullname: 'Peregrin Took',
-            username: 'peregrin.took@shire.com',
-            nickname: 'Pippin',
-            password: 'secret',
-            date_created: '2100-05-22T16:28:32.615Z',
-        }
+          },
+          {
+              fullname: 'Peregrin Took',
+              username: 'peregrin.took@shire.com',
+              nickname: 'Pippin',
+              password: 'lololo',
+              date_created: '2100-05-22T16:28:32.615Z',
+            }
     ]
 }
 
 function makeAllFixtures() {
-    const testData = makeUsersArray()
-    const userData = makeLyricsArray()
-
+    const testData = makeLyricsArray()
+    const userData = makeUsersArray()
     return {
         testData,
         userData
@@ -76,14 +73,17 @@ function makeAllFixtures() {
 async function seedUsersTable(db, users) {
     const preppedUsers = users.map((user) => ({
         ...user,
-        user_password: bcrypt.hashSync(user.user_password, 1)
+        password: bcrypt.hashSync(user.password, 1)
     }))
 
     await db('ghostwriterz_users').insert(preppedUsers)
-    await db.raw(
-        `SELECT setval('ghostwriterz_users_user_id_seq', ?)`,
-        users[users.length - 1].user_id
-    )
+    // await db.raw(`SELECT setval('ghostwriterz_users_id_seq', ?)`,
+    // users[users.length - 1].id)
+    // await db.raw(`SELECT setval(pg_get_serial_sequence('ghostwriterz_users', 'id'), ?)`,
+    // users[users.length - 1].id);
+    await db.raw(`SELECT setval('ghostwriterz_users_id_seq', (SELECT MAX(id) + 1 FROM
+    ghostwriterz_users))`);
+    
 }
 
 function seedAllTables(
@@ -104,7 +104,16 @@ function truncateAllTables(db) {
     )
 }
 
+function makeJWTAuthHeader(user, secret = process.env.JWT_SECRET) {
+	const token = jwt.sign({ id: user.id }, secret, {
+		subject: user.username,
+		algorithm: 'HS256'
+	});
+
+	return `Bearer ${token}`;
+}
 module.exports = {
+    makeJWTAuthHeader,
     makeUsersArray,
     makeLyricsArray,
     makeAllFixtures,

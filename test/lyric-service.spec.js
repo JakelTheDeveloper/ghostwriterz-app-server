@@ -6,11 +6,7 @@ const helpers = require('../test/test-helpers')
 const app = require('../src/app')
 const supertest = require('supertest')
 
-// describe(`Lyrics service object`, function() {
-//     it(`should run the tests`, () => {
-//       expect(true).to.eql(false)
-//     })
-//   })
+
 describe(`Lyrics service object`, function () {
     let db
     let testData = [
@@ -64,7 +60,7 @@ describe(`Lyrics service object`, function () {
     before('Make a connection', () => {
         db = knex({
             client: 'pg',
-            connection: process.env.TEST_DB_URL,
+            connection: process.env.TEST_DATABASE_URL,
         })
         app.set('db', db)
     })
@@ -89,10 +85,7 @@ describe(`Lyrics service object`, function () {
         })
         // return helpers.seedAllTables(db,userData,testData)
         it(`getAllLyrics() resolves all lyrics from 'lyrics_data' table`, () => {
-
             return LyricsService.getAllLyrics(db)
-
-
                 .then(actual => {
                     expect(actual).to.eql(testData)
                 })
