@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const testHelpers = require('./test-helpers')
 const AuthService = require('../src/auth/auth-services')
 
-describe.only(`Auth Endpoint`, () => {
+describe(`Auth Endpoint`, () => {
     let db
 
     let { testData,userData } = testHelpers.makeAllFixtures()
