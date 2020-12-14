@@ -53,8 +53,7 @@ describe(`Lyrics service object`, function () {
             password: 'secretA',
             date_created: '2100-05-22T16:28:32.615Z',
         }
-    ];
-    // const {testData,userData} = helpers.makeAllFixtures();
+    ]
     const testUser = testUsers[0]
 
     before('Make a connection', () => {
@@ -73,7 +72,6 @@ describe(`Lyrics service object`, function () {
 
     context(`Given 'lyric_data' has data`, () => {
         beforeEach(`Seed all tables before each test in this context`, () => {
-            // return helpers.seedAllTables(db,userData,testData)
             return db
                 .into('ghostwriterz_users')
                 .insert(testUsers)
@@ -83,7 +81,6 @@ describe(`Lyrics service object`, function () {
                         .insert(testData)
                 })
         })
-        // return helpers.seedAllTables(db,userData,testData)
         it(`getAllLyrics() resolves all lyrics from 'lyrics_data' table`, () => {
             return LyricsService.getAllLyrics(db)
                 .then(actual => {
@@ -125,7 +122,7 @@ describe(`Lyrics service object`, function () {
                 artist: 2,
                 lyrics: 'updated lyrics'
             }
-            return LyricsService.updateLyrics(db, idOfLyricsToUpdate,newLyricsData.artist, newLyricsData)
+            return LyricsService.updateLyrics(db, idOfLyricsToUpdate, newLyricsData.artist, newLyricsData)
                 .then(() => LyricsService.getById(db, idOfLyricsToUpdate))
                 .then(lyrics => {
                     expect(lyrics).to.eql({
@@ -151,21 +148,21 @@ describe(`Lyrics service object`, function () {
                 lyrics: "Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis"
             }
             return db
-            .into('ghostwriterz_users')
-            .insert(testUsers)
-            .then(()=>{
-                return LyricsService.insertLyrics(db,newLyrics)
-                .then(actual => {
-                    expect(actual).to.eql({
-                        id: 1,
-                        title: "See",
-                        genre: "Rock",
-                        mood: "Energetic",
-                        artist: 1,
-                        lyrics: "Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis"
-                    })
+                .into('ghostwriterz_users')
+                .insert(testUsers)
+                .then(() => {
+                    return LyricsService.insertLyrics(db, newLyrics)
+                        .then(actual => {
+                            expect(actual).to.eql({
+                                id: 1,
+                                title: "See",
+                                genre: "Rock",
+                                mood: "Energetic",
+                                artist: 1,
+                                lyrics: "Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis Leo sociosqu sagittis nascetur netus congue? Dapibus cubilia praesent nam magnis ante felis"
+                            })
+                        })
                 })
-            })
         })
     })
 })
