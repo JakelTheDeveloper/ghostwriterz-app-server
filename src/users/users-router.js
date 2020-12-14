@@ -30,18 +30,22 @@ usersRouter
     const newUser = { fullname, username, nickname, password }
     const REGEX_UPPER_LOWER_NUMBER_SPECIAL = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&])[\S]+/
     let hashedPassword
-
+    for (const field of ['fullname', 'password','passwordConfirm'])
+           if (!req.body[field])
+             return res.status(400).json({
+              error: `Missing '${field}' in request body`
+             })
     if (fullname === '' || fullname === null) {
-      return res.status(400).json({ error: { message: `Missing 'Full Name' in request body` } })
+      return res.status(400).json({ error: { message: `Missing 'fullname' in request body` } })
     } else
       if (username === '' || username === null) {
-        return res.status(400).json({ error: { message: `Missing 'Email' in request body` } })
+        return res.status(400).json({ error: { message: `Missing 'email' in request body` } })
       } else
         if (nickname === '' || nickname === null) {
-          return res.status(400).json({ error: { message: `Missing 'UserName' in request body` } })
+          return res.status(400).json({ error: { message: `Missing 'username' in request body` } })
         } else
           if (password === '' || password === null) {
-            return res.status(400).json({ error: { message: `Missing 'Password' in request body` } })
+            return res.status(400).json({ error: { message: `Missing 'password' in request body` } })
           } else
             if (password.length < 8 || password.length > 72) {
               return res.status(400).json({ error: { message: `Password must be between 8-72 characters long` } })

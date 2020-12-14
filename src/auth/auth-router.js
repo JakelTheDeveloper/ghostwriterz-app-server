@@ -28,6 +28,8 @@ AuthRoute
                     .then(match => {
                         if (!match)
                             return res.status(401).json({ error: 'Invalid password' })
+                        const jwtUser = {username:user.username}
+                        console.log(jwtUser)
                         const token = AuthService.createJWT(user)
                         res.status(200).json({ authToken: token })
                     })

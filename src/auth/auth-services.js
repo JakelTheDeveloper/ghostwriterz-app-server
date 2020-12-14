@@ -21,7 +21,7 @@ const AuthService = {
 
     createJWT(user) {
         return jwt.sign(
-            { user },
+            {user},
             JWT_SECRET,
             {
                 subject: user.username,

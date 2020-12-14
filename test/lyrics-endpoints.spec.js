@@ -52,7 +52,7 @@ describe('Lyrics Endpoints', function () {
             password: 'secretA',
             date_created: '2100-05-22T16:28:32.615Z',
         }
-    ];
+    ]
 
     before('make knex instance', () => {
         db = knex({

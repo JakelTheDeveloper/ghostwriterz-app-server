@@ -45,6 +45,7 @@ function makeLyricsArray() {
 function makeUsersArray() {
     return [
         {
+            id:1,
             fullname: 'Foo',
             username: 'foo@gmail.com',
             nickname: 'DemoFoo',
@@ -52,6 +53,7 @@ function makeUsersArray() {
             date_created: '2029-01-22T16:28:32.615Z'
           },
           {
+              id:2,
               fullname: 'Peregrin Took',
               username: 'peregrin.took@shire.com',
               nickname: 'Pippin',
@@ -77,10 +79,6 @@ async function seedUsersTable(db, users) {
     }))
 
     await db('ghostwriterz_users').insert(preppedUsers)
-    // await db.raw(`SELECT setval('ghostwriterz_users_id_seq', ?)`,
-    // users[users.length - 1].id)
-    // await db.raw(`SELECT setval(pg_get_serial_sequence('ghostwriterz_users', 'id'), ?)`,
-    // users[users.length - 1].id);
     await db.raw(`SELECT setval('ghostwriterz_users_id_seq', (SELECT MAX(id) + 1 FROM
     ghostwriterz_users))`);
     
@@ -93,7 +91,6 @@ function seedAllTables(
 ) {
     return db.transaction(async (trx) => {
         await seedUsersTable(trx, users)
-        await trx('ghostwriterz_users').insert(users)
         await trx('lyric_data').insert(lyrics)
     })
 }
@@ -105,7 +102,7 @@ function truncateAllTables(db) {
 }
 
 function makeJWTAuthHeader(user, secret = process.env.JWT_SECRET) {
-	const token = jwt.sign({ id: user.id }, secret, {
+	const token = jwt.sign({ username: user.username }, secret, {
 		subject: user.username,
 		algorithm: 'HS256'
 	});
