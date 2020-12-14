@@ -26,6 +26,7 @@ app.use('/api/auth', AuthRoute)
 app.use('/api/users', usersRouter)
 app.use('/api/lyrics', lyricRouter)
 
+
 app.use(function errorHandler(error, req, res, next) {
   let response
   if (NODE_ENV === 'production') {
