@@ -81,7 +81,6 @@ async function seedUsersTable(db, users) {
     await db('ghostwriterz_users').insert(preppedUsers)
     await db.raw(`SELECT setval('ghostwriterz_users_id_seq', (SELECT MAX(id) + 1 FROM
     ghostwriterz_users))`);
-    
 }
 
 function seedAllTables(
